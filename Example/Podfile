@@ -1,0 +1,12 @@
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'Ham_Example' do
+    pod 'Ham', :path => '../'
+    pod 'Ham/Render', :path => '../'
+    pod 'Ham/H5', :path => '../'
+    pod 'Ham/iOS', :path => '../'
+  target 'Ham_Tests' do
+  end
+end
