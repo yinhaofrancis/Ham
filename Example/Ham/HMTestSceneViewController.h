@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HMTestSceneViewController : UIViewController<HMNameController,HMParamController,HMManagedController,HMBackgroundFetch>
-
+defineAssociatedProperty(copy, haha, NSString)
 @end
 
 NS_ASSUME_NONNULL_END

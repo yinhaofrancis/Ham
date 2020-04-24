@@ -22,7 +22,8 @@
     [super viewDidLoad];
     [self.tf becomeFirstResponder];
     
-    
+    self.haha = @"aaaaa";
+    NSLog(@"%@", self.haha);
     
 }
 - (void)viewDidAppear:(BOOL)animated{
@@ -64,6 +65,9 @@
     NSLog(@"%@",@"HMTestSceneViewController");
 }
 @synthesize controllerManager;
+
+
+synthesizeAssociatedProperty(HMCopy, haha)
 
 @end
 @HMComponent(HMBackgroundFetchKK, HMTestSceneViewController)

@@ -18,6 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+
 }
 - (void)showRoute:(nonnull NSString *)name withParam:(nullable NSDictionary *)param {
     if(param.count > 0){
@@ -30,6 +31,7 @@
 @synthesize controllerManager;
 
 - (IBAction)t:(id)sender {
+    
 }
 + (HMModuleMemoryType)memoryType {
     return HMModuleWeakSinglten;

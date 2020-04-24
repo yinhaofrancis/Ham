@@ -146,12 +146,6 @@
     const char * c = protocol_getMethodDescription(proto, selector, false, true).types;
     return [HMOCRunTimeTool addMethodToClass:cls selector:selector withType:c imp:block];
 }
-+ (void)setAssociatedValue:(id)value withName:(NSString *)name toObject:(id)object{
-    objc_setAssociatedObject(object, name.UTF8String, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-+ (id)getAssociatedValueFromName:(NSString *)name atObject:(id)object{
-    return objc_getAssociatedObject(object, name.UTF8String);
-}
 @end
 @implementation NSString (OCRuntime)
 

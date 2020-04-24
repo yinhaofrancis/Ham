@@ -62,12 +62,22 @@ typedef void(^didSetBlock)(id,void * _Nullable);
                            imp:(id)block;
 
 
-+ (void)setAssociatedValue:(id)value withName:(NSString *)name toObject:(id)object;
-
-+ (id)getAssociatedValueFromName:(NSString *)name atObject:(id)object;
-
 @end
 
+#define HMAssign 0
+#define HMStrong 1
+#define HMCopy   3
+
+#define defineAssociatedProperty(memory,name,type)\
+@property(nonatomic,nullable,getter=get##name,memory,setter=set##name:) type * name;
+
+#define synthesizeAssociatedProperty(memory,name) \
+-(id)get##name{  \
+    return objc_getAssociatedObject(self, "\"____"#name"\""); \
+} \
+-(void)set##name:(id)v{ \
+    objc_setAssociatedObject(self, "\"____"#name"\"", v, memory); \
+} \
 
 @interface NSString (OCRuntime)
 @property(nonatomic,readonly) NSString* firstCapitalizedString;
