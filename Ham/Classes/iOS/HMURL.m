@@ -18,7 +18,7 @@
     NSMutableDictionary* a = [[NSMutableDictionary alloc] init];
     NSURLComponents* comp = [[NSURLComponents alloc] initWithString:self.absoluteString];
     [comp.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [a setObject:obj.name forKey:obj.value];
+        [a setObject:obj.value forKey:obj.name];
     }];
     return [a copy];
 }
