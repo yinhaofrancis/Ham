@@ -88,14 +88,15 @@
 + (HMModuleMemoryType)memoryType {
     return HMModuleSinglten;
 }
-- (void)showRoute:(NSString *)name withParam:(NSDictionary *)param{
+- (BOOL)showRoute:(NSString *)name withParam:(NSDictionary *)param{
     while (!self.routers.lastObject.content && self.routers.count > 0) {
         [self.routers removeLastObject];
     }
     id<HMRouterController> ro = (id<HMRouterController>)self.routers.lastObject.content;
     if(ro){
-        [ro showRoute:name withParam:param];
+        return [ro showRoute:name withParam:param];
     }
+    return false;
 }
 - (instancetype)init
 {

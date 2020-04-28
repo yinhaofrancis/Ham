@@ -8,12 +8,20 @@
 #import <UIKit/UIKit.h>
 #import "HMModule.h"
 
-#define HMSectCtrl "HMSectCtrl"
 #define HMSectCtrlKey "HMSectCtrl"
 
 #define HMController(router,controller) \
 class controller; \
 @HMCustomAnnotation(HMSectCtrl,router,controller)
+
+
+#define HMController(router,controller) \
+class controller; \
+@HMCustomAnnotation(HMSectCtrl,router,controller)
+
+#define HMKeyController(router,controller) \
+class controller; \
+@HMCustomAnnotationStringkey(HMSectCtrl,router,controller)
 
 #define HMNibController(router,bundleId) \
 HMCustomAnnotationString(HMSectCtrl,router,bundleId)
@@ -63,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol HMRouterController <NSObject>
 
-- (void)showRoute:(NSString *)name withParam:(nullable NSDictionary *)param;
+- (BOOL)showRoute:(NSString *)name withParam:(nullable NSDictionary *)param;
 
 @end
 

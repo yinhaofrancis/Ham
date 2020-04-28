@@ -39,7 +39,6 @@ char const * HM##proto##_ser HMDATA(HMSectModuleName) =  "{ \""#proto"\" : \""#c
 class HMAnnotation; \
 char const * HM##owner##_##key##_##value##_contr_Annotation HMDATA(HMSectCustom) =  "{\""#owner"\":{ \""#key"\" : \""#value"\"}}";
 
-
 #define HMCustomAnnotationString(owner,key,value) \
 class HMAnnotation; \
 char const * HM##owner##_##key##_contr_Annotation HMDATA(HMSectCustom) =  "{\""#owner"\":{ \""#key"\" :\"" value"\"}}";

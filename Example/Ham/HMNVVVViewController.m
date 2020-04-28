@@ -47,4 +47,4 @@
 
 
 @HMController(nav, HMNVVVViewController);
-@HMComponent(HMBackgroundFetch, HMNVVVViewController)
+//@HMComponent(HMBackgroundFetch, HMNVVVViewController)
