@@ -1,12 +1,12 @@
 PODS:
-  - Ham (0.2.18):
-    - Ham/Module (= 0.2.18)
-  - Ham/H5 (0.2.18):
+  - Ham (0.2.24):
+    - Ham/Module (= 0.2.24)
+  - Ham/H5 (0.2.24):
     - Ham/iOS
-  - Ham/iOS (0.2.18):
+  - Ham/iOS (0.2.24):
     - Ham/Module
-  - Ham/Module (0.2.18)
-  - Ham/Render (0.2.18):
+  - Ham/Module (0.2.24)
+  - Ham/Render (0.2.24):
     - Ham/Module
 
 DEPENDENCIES:
@@ -20,7 +20,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Ham: 950d5f94d2b763c18ac9f847fa1c2db5dd4807d9
+  Ham: 433d15000fc59dc2ff9b24c854893a46b265bdf1
 
 PODFILE CHECKSUM: d6eb29a51fb529a2312d344a91d4fb37658e6216
 

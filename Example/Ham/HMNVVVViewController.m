@@ -17,15 +17,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = UIColor.brownColor;
     // Do any additional setup after loading the view.
+    
 
 }
-- (void)showRoute:(nonnull NSString *)name withParam:(nullable NSDictionary *)param {
+- (BOOL)showRoute:(nonnull NSString *)name withParam:(nullable NSDictionary *)param {
     if(param.count > 0){
         [self pushViewController:HMGetControllerWithParam(name, param) animated:true];
     }else{
         [self pushViewController:HMGetController(name) animated:true];
     }
+    return true;
 }
 
 @synthesize controllerManager;
@@ -46,5 +49,5 @@
 @end
 
 
-@HMController(nav, HMNVVVViewController);
+@HMKeyController("/dddd/ddd", HMNVVVViewController)
 //@HMComponent(HMBackgroundFetch, HMNVVVViewController)

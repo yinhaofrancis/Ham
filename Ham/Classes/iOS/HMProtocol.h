@@ -21,7 +21,7 @@ class controller; \
 
 #define HMKeyController(router,controller) \
 class controller; \
-@HMCustomAnnotationStringkey(HMSectCtrl,router,controller)
+char const * HMConr_##controller##_contr_Annotation HMDATA(HMSectCustom) =  "{\"HMSectCtrl\":{ \"" router"\" :\""#controller"\"}}";
 
 #define HMNibController(router,bundleId) \
 HMCustomAnnotationString(HMSectCtrl,router,bundleId)

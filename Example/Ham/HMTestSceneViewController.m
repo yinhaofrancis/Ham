@@ -33,7 +33,7 @@
     NSLog(@"%@",sender);
 }
 - (IBAction)showkeyBoard:(id)sender {
-    UIViewController *v = HMGetController(@"haha");
+    UIViewController *v = HMGetController(@"/dddd/ddd");
     [self.controllerManager  handleName:nil vc:v callback:^(NSNotification * _Nonnull no) {
         NSLog(@"%@",no);
     }];
