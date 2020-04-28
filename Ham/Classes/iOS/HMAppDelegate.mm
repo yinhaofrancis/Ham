@@ -12,6 +12,7 @@
 
 @implementation HMAppDelegate{
     NSMutableDictionary<NSString*,id> * componentInst;
+    UIBackgroundTaskIdentifier _backgroundId;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -63,67 +64,15 @@
     return self.windowManager.currentwindow;
 }
 
-//+ (void)initialize {
-//    if([InstantProtocol(HMOpenUrl) respondsToSelector:@selector(openURL:option:)]){
-//        [HMOCRunTimeTool classImplamentProtocol:@protocol(UIApplicationDelegate) selector:@selector(application:openURL:options:) toClass:self imp:^(id a,UIApplication* app,NSURL* url,NSDictionary<UIApplicationOpenURLOptionsKey,id> *options){
-//            return [InstantProtocol(HMOpenUrl) openURL:url option:options];
-//        }];
-//    }
-//    id<HMBackgroundFetch> a = InstantProtocol(HMBackgroundFetch);
-//    if([a respondsToSelector:@selector(handleFetch:)]){
-//        [HMOCRunTimeTool classImplamentProtocol:@protocol(UIApplicationDelegate) selector:@selector(application:performFetchWithCompletionHandler:) toClass:self imp:^(id s, UIApplication* app,void (^completionHandler)(UIBackgroundFetchResult) ){
-//            [InstantProtocol(HMBackgroundFetch) handleFetch:completionHandler];
-//        }];
-//    }
-//    if([InstantProtocol(HMRemoteNotification) respondsToSelector:@selector(handleToken:)]){
-//        [HMOCRunTimeTool classImplamentProtocol:@protocol(UIApplicationDelegate) selector:@selector(application:didRegisterForRemoteNotificationsWithDeviceToken:) toClass:self imp:^(id s, UIApplication* app,NSData* deviceToken){
-//            [InstantProtocol(HMRemoteNotification) handleToken:deviceToken];
-//        }];
-//    }
-//    if([InstantProtocol(HMRemoteNotification) respondsToSelector:@selector(handleRemoteNotification:)]){
-//        [HMOCRunTimeTool classImplamentProtocol:@protocol(UIApplicationDelegate) selector:@selector(application:didReceiveRemoteNotification:) toClass:self imp:^(id s,UIApplication* app ,NSDictionary* userInfo){
-//            [InstantProtocol(HMRemoteNotification) handleRemoteNotification:userInfo];
-//        }];
-//    }
-//    if([InstantProtocol(HMRemoteNotification) respondsToSelector:@selector(handleLocalNotification:)]){
-//        [HMOCRunTimeTool classImplamentProtocol:@protocol(UIApplicationDelegate) selector:@selector(application:didReceiveLocalNotification:) toClass:self imp:^(id s,UIApplication *app,UILocalNotification *notification){
-//            [InstantProtocol(HMRemoteNotification) handleLocalNotification:notification];
-//        }];
-//    }
-//    if([InstantProtocol(HMRemoteNotification) respondsToSelector:@selector(didFailToRegisterForRemoteNotificationsWithError:)]){
-//        [HMOCRunTimeTool classImplamentProtocol:@protocol(UIApplicationDelegate) selector:@selector(application:didFailToRegisterForRemoteNotificationsWithError:) toClass:self imp:^(id s,UIApplication *app,NSError * e){
-//            [InstantProtocol(HMRemoteNotification) didFailToRegisterForRemoteNotificationsWithError:e];
-//        }];
-//    }
-////    didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-//    if (@available(iOS 10.0, *)) {
-//        if([InstantProtocol(HMRemoteNotification) respondsToSelector:@selector(willPresentNotification:withCompletionHandler:)]){
-//            [HMOCRunTimeTool classImplamentProtocol:@protocol(UNUserNotificationCenterDelegate) selector:@selector(userNotificationCenter:willPresentNotification:withCompletionHandler:) toClass:self imp:^(id self,UNUserNotificationCenter* center,void (^completionHandler)(UNNotificationPresentationOptions)){
-//
-//            }];
-//        }
-//        if([InstantProtocol(HMRemoteNotification) respondsToSelector:@selector(didReceiveNotificationResponse:withCompletionHandler:)]){
-//
-//            [HMOCRunTimeTool classImplamentProtocol:@protocol(UNUserNotificationCenterDelegate) selector:@selector(userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:) toClass:self imp:^(id s,UNUserNotificationCenter* center,UNNotificationResponse * response,void (^completionHandler)(void)){
-//                [InstantProtocol(HMRemoteNotification) didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
-//            }];
-//        }
-//    }
-//    if (@available(iOS 13.0, *)) {
-//        if([InstantProtocol(HMSceneProtocol) respondsToSelector:@selector(configurationForConnectingSceneSession:options:)]){
-//            [HMOCRunTimeTool classImplamentProtocol:@protocol(UIApplicationDelegate) selector:@selector(application:configurationForConnectingSceneSession:options:) toClass:self imp:^(id s,UIApplication *app,UISceneSession * connectingSceneSession,UISceneConnectionOptions * option){
-//                [InstantProtocol(HMSceneProtocol) configurationForConnectingSceneSession:connectingSceneSession options:option];
-//            }];
-//        }
-//        if([InstantProtocol(HMSceneProtocol) respondsToSelector:@selector(didDiscardSceneSessions:)]){
-//            [HMOCRunTimeTool classImplamentProtocol:@protocol(UIApplicationDelegate) selector:@selector(application:didDiscardSceneSessions:) toClass:self imp:^(id s,UIApplication *app,NSSet<UISceneSession *> * sessions){
-//                [InstantProtocol(HMSceneProtocol) didDiscardSceneSessions:sessions];
-//            }];
-//        }
-//    }
-    
-    
-//}【【。；。；
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    _backgroundId = [application beginBackgroundTaskWithExpirationHandler:^{
+        
+    }];
+}
+- (void)applicationWillEnterForeground:(UIApplication *)application{
+    [application endBackgroundTask:_backgroundId];
+}
+
 
 - (instancetype)init
 {
