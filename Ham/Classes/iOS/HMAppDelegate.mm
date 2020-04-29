@@ -21,9 +21,6 @@
     if (@available(iOS 10.0, *)) {
         [UNUserNotificationCenter currentNotificationCenter].delegate = self;
     }
-    if([HMModuleManager.shared getInstanceByProtocol:@protocol(HMRemoteNotification)]){
-        [InstantProtocol(HMRemoteNotification) config];
-    }
     if (@available(iOS 13.0, *)) {
         Class cls = UIApplication.sharedApplication.openSessions.allObjects.firstObject.configuration.delegateClass;
         if(cls == nil){

@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @protocol HMRemoteNotification <HMModule>
-- (void)config;
+
 @optional
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 
