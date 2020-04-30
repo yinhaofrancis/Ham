@@ -90,9 +90,8 @@
         [HMOCRunTimeTool classImplamentProtocol:@protocol(HMRouterController) selector:@selector(showRoute:withParam:callback:) toClass:obj.class imp:^BOOL (id<HMRoute> s,NSString *name,NSDictionary * param ,handleControllerCallback call) {
             
             UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[HMCallBack.alloc initWithCallBack:call]];
-            
-            [o displayViewController:vc WithName:name] ;
             if(vc){
+                [o displayViewController:vc WithName:name];
                 return true;
             }else {
                 return false;
@@ -104,7 +103,7 @@
 
         objc_setAssociatedObject(obj, @"_^&^callback", ctx, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [HMOCRunTimeTool classImplamentProtocol:@protocol(HMManagedController) selector:@selector(callbackWithName:param:) toClass:obj.class imp:^(id s,NSString *name,NSDictionary * param){
-            id<HMManagedController> wc = objc_getAssociatedObject(s, @"_^&^callback");
+            id<HMControllerCallback> wc = objc_getAssociatedObject(s, @"_^&^callback");
             if(wc && [wc respondsToSelector:@selector(handleCallbackWithName:param:)]){
                 [wc handleCallbackWithName:name param:param];
             }
@@ -156,3 +155,6 @@
 }
 @synthesize controllerManager;
 @end
+
+
+

@@ -9,7 +9,7 @@
 #import "HMAppDelegate.h"
 #import "Ham.h"
 #import "HMOCRunTimeTool.h"
-
+#import "HMProtocol.h"
 @implementation HMAppDelegate{
     NSMutableDictionary<NSString*,id> * componentInst;
     UIBackgroundTaskIdentifier _backgroundId;
@@ -49,11 +49,11 @@
     if(name.length == 0){
         name = @"rootVC";
     }
-    UIViewController* v = HMGetController(name);
+    UIViewController* v = HMGetController(name, nil, nil);
     if(v){
         return v;
     }else{
-        return HMGetController(@"");
+        return HMGetController(@"",nil,nil);
     }
 }
 

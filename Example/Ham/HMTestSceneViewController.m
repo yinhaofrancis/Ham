@@ -29,7 +29,7 @@
     NSLog(@"%@",sender);
 }
 - (IBAction)showkeyBoard:(id)sender {
-    HMShowRouterWithParamAndCallback(@"haha", @{@"a":@"a"},^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
+    HMShowRoute(@"haha", @{@"a":@"a"},^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
         NSLog(@"param    %@",param);
     });
     
@@ -40,10 +40,12 @@
 //        NSLog(@"param    %@",param);
 //    });
     
-    UIViewController *vc = HMGetControllerWithCallback(@"/jj/l", @{@"g":@"h"}, ^(NSString * name,NSDictionary *param){
+//    UIViewController *vc = HMGetControllerWithCallback(@"/jj/l", @{@"g":@"h"}, ^(NSString * name,NSDictionary *param){
+//        NSLog(@"param    %@",param);
+//    });
+    UIViewController *vc = HMGetController(@"/jj/l",  @{@"g":@"h"}, ^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
         NSLog(@"param    %@",param);
     });
-    vc.modalPresentationStyle = UIModalPresentationAutomatic;
     [self presentViewController:vc animated:true completion:nil];
 }
 

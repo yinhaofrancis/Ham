@@ -23,11 +23,11 @@
     if(name.length == 0){
         name = @"rootVC";
     }
-    UIViewController* v = HMGetController(name);
+    UIViewController* v = HMGetController(name,nil,nil);
     if(v){
         return v;
     }else{
-        return HMGetController(@"");
+        return HMGetController(@"",nil,nil);
     }
 }
 - (BOOL)showKeyWindow{

@@ -26,30 +26,19 @@ char const * HMConr_##controller##_contr_Annotation HMDATA(HMSectCustom) =  "{\"
 #define HMNibController(router,bundleId) \
 HMCustomAnnotationString(HMSectCtrl,router,bundleId)
 
-#define HMGetController(name) \
-[InstantProtocol(HMControllerManager) dequeueViewController:name param:nil context:nil]
-
-#define HMGetControllerWithParam(name,p) \
-[InstantProtocol(HMControllerManager) dequeueViewController:name param:p context:nil]
-
-#define HMGetControllerCtx(name,ctx) \
-[InstantProtocol(HMControllerManager) dequeueViewController:name param:nil context:ctx]
-
-#define HMGetControllerWithParamCtx(name,p,ctx) \
-[InstantProtocol(HMControllerManager) dequeueViewController:name param:p context:ctx]
-
-#define HMShowRouterWithParam(router,param) \
-[InstantProtocol(HMRouterController) showRoute:router withParam:param callback:nil]
-
-#define HMShowRouterWithParamAndCallback(router,param,handle) \
-[InstantProtocol(HMRouterController) showRoute:router withParam:param callback:handle]
-
-#define HMGetControllerWithCallback(name,p,callback) \
-[InstantProtocol(HMControllerManager) dequeueViewController:name param:p handle:callback]
-
 NS_ASSUME_NONNULL_BEGIN
 
+
+
 typedef void(^handleControllerCallback)(NSString * name,NSDictionary *param);
+@protocol HMControllerCallback;
+
+
+UIViewController* HMGetController(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
+
+UIViewController* HMGetControllerWithContext(NSString * name,NSDictionary  * _Nullable  param,id<HMControllerCallback> context);
+
+BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
 
 @protocol HMControllerManager <NSObject>
 
