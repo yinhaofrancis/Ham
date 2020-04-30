@@ -18,7 +18,7 @@
     [super viewDidLoad];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        [self callbackWithName:@"haha" param:@{@"dddd":@"dddds"}];
+        [self callbackWithName:@"haha" param:@{@"dddd":NSUUID.UUID.UUIDString}];
     });
     // Do any additional setup after loading the view from its nib.
 }

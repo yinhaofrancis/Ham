@@ -32,7 +32,9 @@
     }
     return vc;
 }
-
+- (UIViewController *)dequeueViewController:(NSString *)name param:(NSDictionary *)param handle:(handleControllerCallback)callback{
+    return [self dequeueViewController:name param:param context:[[HMCallBack alloc] initWithCallBack:callback]];
+}
 - (UIViewController *)dequeueViewControllerInner:(NSString *)name param:(NSDictionary *)param context:(id)ctx{
     NSDictionary* dc = [HMAnotationStorage.shared getEnvConfigByName:@HMSectCtrlKey];
     Class cls = NSClassFromString(dc[name]);

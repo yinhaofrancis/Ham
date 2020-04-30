@@ -44,15 +44,22 @@ HMCustomAnnotationString(HMSectCtrl,router,bundleId)
 #define HMShowRouterWithParamAndCallback(router,param,handle) \
 [InstantProtocol(HMRouterController) showRoute:router withParam:param callback:handle]
 
+#define HMGetControllerWithCallback(name,p,callback) \
+[InstantProtocol(HMControllerManager) dequeueViewController:name param:p handle:callback]
+
 NS_ASSUME_NONNULL_BEGIN
+
+typedef void(^handleControllerCallback)(NSString * name,NSDictionary *param);
 
 @protocol HMControllerManager <NSObject>
 
 - (UIViewController *)dequeueViewController:(NSString *)name param:(nullable NSDictionary *)param context:(nullable id)ctx;
 
+- (UIViewController *)dequeueViewController:(NSString *)name param:(nullable NSDictionary *)param handle:(nullable handleControllerCallback)callback;
+
 @end
 
-typedef void(^handleControllerCallback)(NSString * name,NSDictionary *param);
+
 
 @protocol HMControllerCallback <NSObject>
 @optional

@@ -36,9 +36,15 @@
    
 }
 - (IBAction)eeeee:(id)sender {
-    HMShowRouterWithParamAndCallback(@"/jj/l", @{@"g":@"h"},^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
+//    HMShowRouterWithParamAndCallback(@"/jj/l", @{@"g":@"h"},^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
+//        NSLog(@"param    %@",param);
+//    });
+    
+    UIViewController *vc = HMGetControllerWithCallback(@"/jj/l", @{@"g":@"h"}, ^(NSString * name,NSDictionary *param){
         NSLog(@"param    %@",param);
     });
+    vc.modalPresentationStyle = UIModalPresentationAutomatic;
+    [self presentViewController:vc animated:true completion:nil];
 }
 
 - (BOOL)showKeyWindow {
