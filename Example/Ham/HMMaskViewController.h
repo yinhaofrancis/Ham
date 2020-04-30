@@ -10,7 +10,7 @@
 #import <Ham/Ham.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HMMaskViewController : UIViewController<HMWindowObject,HMManagedController>
+@interface HMMaskViewController : UIViewController<HMWindowObject,HMManagedController,HMParamController>
 
 @end
 

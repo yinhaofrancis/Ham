@@ -20,11 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.tf becomeFirstResponder];
-    
-    self.haha = @"aaaaa";
-    NSLog(@"%@", self.haha);
-    
+
 }
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
@@ -33,18 +29,24 @@
     NSLog(@"%@",sender);
 }
 - (IBAction)showkeyBoard:(id)sender {
-    UIViewController *v = HMGetController(@"/dddd/ddd");
-    [self.controllerManager  handleName:nil vc:v callback:^(NSNotification * _Nonnull no) {
-        NSLog(@"%@",no);
-    }];
-    [self showViewController:v sender:nil];
-//    HMShowRouterWithParam(@"haha", @{@"da":@"d"});
+    HMShowRouterWithParamAndCallback(@"haha", @{@"a":@"a"},^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
+        NSLog(@"param    %@",param);
+    });
+    
+   
+}
+- (IBAction)eeeee:(id)sender {
+    HMShowRouterWithParamAndCallback(@"/jj/l", @{@"g":@"h"},^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
+        NSLog(@"param    %@",param);
+    });
 }
 
 - (BOOL)showKeyWindow {
     return true;
 }
-
+- (void)handleCallbackWithName:(NSString *)name param:(NSDictionary *)param{
+    
+}
 - (nonnull UIViewController *)rootVC {
     return self;
 }
@@ -61,13 +63,9 @@
     return HMModuleWeakSinglten;
 }
 
-- (void)application:(nonnull UIApplication *)application performFetchWithCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
-    NSLog(@"%@",@"HMTestSceneViewController");
-}
 @synthesize controllerManager;
 
 
 synthesizeAssociatedProperty(HMCopy, haha)
 
 @end
-@HMComponent(HMBackgroundFetchKK, HMTestSceneViewController)

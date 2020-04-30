@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSDictionary<NSString *,NSString *> *urlParam;
 
-- (nullable UIViewController *)open;
+//- (nullable UIViewController *)open;
 
 @end
 

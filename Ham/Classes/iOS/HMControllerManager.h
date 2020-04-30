@@ -11,14 +11,14 @@
 #import "HMWeakContainer.h"
 
 NS_ASSUME_NONNULL_BEGIN
+@interface HMCallBack : NSObject<HMManagedController>
+@property (nonatomic,readonly) handleControllerCallback callback;
+- (instancetype)initWithCallBack:(handleControllerCallback)callback;
+@end
+
 
 @interface HMControllerManagerImp : NSObject<HMModule,HMControllerManager,HMRouterController>
 @property (nonatomic,strong) NSMutableArray<HMWeakContainer *> *routers;
-
-@property(nonatomic,readonly) NSNotificationCenter* notificationCenter;
-
-@property(nonatomic,readonly) NSNotificationQueue* notificationQueue;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -10,7 +10,7 @@
 #import <Ham/Ham.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HMNVVVViewController : UINavigationController<HMRouterController,HMManagedController,HMBackgroundFetch>
+@interface HMNVVVViewController : UINavigationController<HMRoute,HMManagedController,HMBackgroundFetch>
 
 @end
 

@@ -30,12 +30,6 @@
         return HMGetController(@"");
     }
 }
-- (void)scene:(UIScene *)scene continueUserActivity:(NSUserActivity *)userActivity API_AVAILABLE(ios(13.0)){
-    
-}
-- (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts{
-    
-}
 - (BOOL)showKeyWindow{
     return true;
 }

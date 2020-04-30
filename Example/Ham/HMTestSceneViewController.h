@@ -10,7 +10,7 @@
 #import <Ham/Ham.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HMTestSceneViewController : UIViewController<HMNameController,HMParamController,HMManagedController,HMBackgroundFetch>
+@interface HMTestSceneViewController : UIViewController<HMNameController,HMParamController,HMManagedController>
 defineAssociatedProperty(copy, haha, NSString)
 @end
 

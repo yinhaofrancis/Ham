@@ -26,6 +26,8 @@
 		A944AA082432E02500705119 /* HMJSONPaser.m in Sources */ = {isa = PBXBuildFile; fileRef = A944AA072432E02500705119 /* HMJSONPaser.m */; };
 		A965DBB023FCE5E200AA9D86 /* HMTestRun.m in Sources */ = {isa = PBXBuildFile; fileRef = A965DBAF23FCE5E200AA9D86 /* HMTestRun.m */; };
 		A965DBB323FCF0BB00AA9D86 /* HMTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = A965DBB223FCF0BB00AA9D86 /* HMTestCase.m */; };
+		A96FC43C245AC3D1001AC023 /* HMEEEViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96FC43A245AC3D1001AC023 /* HMEEEViewController.m */; };
+		A96FC43D245AC3D1001AC023 /* HMEEEViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96FC43B245AC3D1001AC023 /* HMEEEViewController.xib */; };
 		A97B6D3E2428A7880044C6AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A97B6D3D2428A7880044C6AD /* Main.storyboard */; };
 		A97B6D412428ABF40044C6AD /* HMTestSceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97B6D402428ABF40044C6AD /* HMTestSceneViewController.m */; };
 		A97F74AF24233587003B7FDF /* HMConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = A97F74AE24233587003B7FDF /* HMConfig.m */; };
@@ -84,6 +86,9 @@
 		A965DBAF23FCE5E200AA9D86 /* HMTestRun.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HMTestRun.m; sourceTree = "<group>"; };
 		A965DBB123FCF0BB00AA9D86 /* HMTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HMTestCase.h; sourceTree = "<group>"; };
 		A965DBB223FCF0BB00AA9D86 /* HMTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HMTestCase.m; sourceTree = "<group>"; };
+		A96FC439245AC3D1001AC023 /* HMEEEViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HMEEEViewController.h; sourceTree = "<group>"; };
+		A96FC43A245AC3D1001AC023 /* HMEEEViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HMEEEViewController.m; sourceTree = "<group>"; };
+		A96FC43B245AC3D1001AC023 /* HMEEEViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HMEEEViewController.xib; sourceTree = "<group>"; };
 		A97B6D3D2428A7880044C6AD /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		A97B6D3F2428ABF40044C6AD /* HMTestSceneViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HMTestSceneViewController.h; sourceTree = "<group>"; };
 		A97B6D402428ABF40044C6AD /* HMTestSceneViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HMTestSceneViewController.m; sourceTree = "<group>"; };
@@ -180,6 +185,9 @@
 				A910C691244993F6000540AB /* HMMaskViewController.h */,
 				A910C692244993F6000540AB /* HMMaskViewController.m */,
 				A910C693244993F6000540AB /* HMMaskViewController.xib */,
+				A96FC439245AC3D1001AC023 /* HMEEEViewController.h */,
+				A96FC43A245AC3D1001AC023 /* HMEEEViewController.m */,
+				A96FC43B245AC3D1001AC023 /* HMEEEViewController.xib */,
 			);
 			name = "Example for Ham";
 			path = Ham;
@@ -333,6 +341,7 @@
 			files = (
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				A910C695244993F6000540AB /* HMMaskViewController.xib in Resources */,
+				A96FC43D245AC3D1001AC023 /* HMEEEViewController.xib in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
 				A97B6D3E2428A7880044C6AD /* Main.storyboard in Resources */,
 			);
@@ -441,6 +450,7 @@
 				A944AA052432D7DF00705119 /* HMModel.m in Sources */,
 				A97B6D412428ABF40044C6AD /* HMTestSceneViewController.m in Sources */,
 				A97F74AF24233587003B7FDF /* HMConfig.m in Sources */,
+				A96FC43C245AC3D1001AC023 /* HMEEEViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 				A9D3C532244979140087C555 /* UIResponder+HMResponder.m in Sources */,
 				B7EAC37823595F4A00865677 /* HMTest.m in Sources */,
