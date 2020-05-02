@@ -13,6 +13,7 @@
     DrawCallBlock drawCallBlock;
     void* buffer;
     CGContextRef ctx;
+    NSData * _pixelData;
 }
 - (instancetype)initWithBitmapBuffer:(void *)buffer Size:(CGSize)size ForCallback:(DrawCallBlock)call{
     self = [super init];
@@ -48,11 +49,12 @@
     return ximg;
 }
 - (CGImageRef)synchronizationGC{
-    CGContextRef ctx = [self makeContext];
-    self->ctx = ctx;
+    if(!ctx){
+        CGContextRef ctx = [self makeContext];
+        self->ctx = ctx;
+    }
     drawCallBlock(ctx,self);
-    CGImageRef img = self.isPNG ? CGBitContextExportPNG(ctx, 1) :CGBitContextExportJPG(ctx, 1);
-    CGContextRelease(ctx);
+    CGImageRef img = [self cgImage];
     return img;
 }
 - (void)asynchronization:(void(^)(UIImage * _Nullable))callback{
@@ -65,10 +67,11 @@
     });
 }
 - (void)render{
-    CGContextRef ctx = [self makeContext];
-    self->ctx = ctx;
+    if(!self.ctx) {
+        CGContextRef ctx = [self makeContext];
+        self->ctx = ctx;
+    }
     drawCallBlock(ctx,self);
-    CGContextRelease(ctx);
 }
 
 - (CGContextRef) makeContext{
@@ -83,6 +86,45 @@
 }
 - (CGContextRef)ctx{
     return self->ctx;
+}
+-(void)setHasAlpha:(BOOL)hasAlpha{
+    _hasAlpha = hasAlpha;
+    CGContextRelease(ctx);
+    ctx = [self makeContext];
+}
+-(void)setIsPNG:(BOOL)isPNG{
+    _isPNG = isPNG;
+}
+- (CIImage *)ciImage {
+    if(!ctx){
+        self->ctx = [self makeContext];
+    }
+    CGSize size = CGSizeMake(CGBitmapContextGetWidth(ctx), CGBitmapContextGetHeight(ctx));
+    return [[CIImage alloc] initWithBitmapData:self.pixelData bytesPerRow:CGBitmapContextGetBytesPerRow(ctx) size:size format:kCIFormatRGBA8 colorSpace:CGBitmapContextGetColorSpace(ctx)];
+}
+- (UIImage *)uiImage{
+    CGImageRef img = [self cgImage];
+    
+    UIImage *Iimg = [[UIImage alloc] initWithCGImage:img];
+    
+    CGImageRelease(img);
+    
+    return Iimg;
+}
+
+
+- (CGImageRef)cgImage {
+    return self.isPNG ? CGBitContextExportPNG(ctx, 1) :CGBitContextExportJPG(ctx, 1);
+}
+
+- (NSData *)pixelData{
+    if(!_pixelData) {
+        _pixelData = [[NSData alloc] initWithBytesNoCopy:CGBitmapContextGetData(ctx) length:CGBitmapContextGetBytesPerRow(ctx) * CGBitmapContextGetHeight(ctx)];
+    }
+    return _pixelData;
+}
+- (void)dealloc {
+    CGContextRelease(ctx);
 }
 @end
 CGContextRef createContext(CGSize size,CGFloat scale ,void* bitmapBuffer){
@@ -113,8 +155,7 @@ CGContextRef createContextNoAlpha(CGSize size,CGFloat scale,CGColorRef fillColor
     return ctx;
     
 }
-CGImageRef CGBitContextExportPNG(CGContextRef ctx,CGFloat quality){
-    CGImageRef img = CGBitmapContextCreateImage(ctx);
+CGImageRef CGBitMapExportPNG(CGImageRef img,CGFloat quality) {
     CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorSystemDefault, 0);
     CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypePNG, 1, NULL);
     CFNumberRef number = CFNumberCreate(kCFAllocatorSystemDefault, kCFNumberFloatType, &quality);
@@ -138,6 +179,10 @@ CGImageRef CGBitContextExportPNG(CGContextRef ctx,CGFloat quality){
     CFAutorelease(property);
     CFRelease(source);
     return result;
+}
+CGImageRef CGBitContextExportPNG(CGContextRef ctx,CGFloat quality){
+    CGImageRef img = CGBitmapContextCreateImage(ctx);
+    return CGBitMapExportPNG(img,quality);
 }
 CGImageRef CGBitContextExportJPG(CGContextRef ctx,CGFloat quality){
     CGImageRef img = CGBitmapContextCreateImage(ctx);
@@ -164,4 +209,20 @@ CGImageRef CGBitContextExportJPG(CGContextRef ctx,CGFloat quality){
     CFAutorelease(property);
     CFRelease(source);
     return result;
+}
+
+CIImage * CGBitmapContextGetCIImage(CGContextRef ctx) {
+    
+    size_t pr = CGBitmapContextGetBytesPerRow(ctx);
+    
+    size_t h = CGBitmapContextGetHeight(ctx);
+    
+    size_t w = CGBitmapContextGetWidth(ctx);
+    
+    NSUInteger len = pr * h;
+    
+    
+    
+    NSData* data = [[NSData alloc] initWithBytes:CGBitmapContextGetData(ctx) length:len];
+    return [[CIImage alloc] initWithBitmapData:data bytesPerRow:pr size:CGSizeMake(w, h) format:kCIFormatRGBA8 colorSpace:CGBitmapContextGetColorSpace(ctx)];
 }

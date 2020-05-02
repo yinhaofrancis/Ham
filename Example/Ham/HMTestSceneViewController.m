@@ -11,42 +11,26 @@
 #import "HMModel.h"
 #import "HMJSONPaser.h"
 #import "HMMaskViewController.h"
+#import <GLKit/GLKit.h>
+#import "HMRenderImage.h"
 @interface HMTestSceneViewController ()
-@property (weak, nonatomic) IBOutlet UITextField *tf;
+
 @property(nullable,nonatomic)id<HMWindowManager > windowManager;
+
+@property(nonatomic,strong) CIContext *context;
+@property(nonatomic,strong) HMRenderImage *image;
 @end
 
 @implementation HMTestSceneViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
 }
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
 }
 - (void)mask:(id)sender{
-    NSLog(@"%@",sender);
-}
-- (IBAction)showkeyBoard:(id)sender {
-    HMShowRoute(@"haha", @{@"a":@"a"},^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
-        NSLog(@"param    %@",param);
-    });
-    
-   
-}
-- (IBAction)eeeee:(id)sender {
-//    HMShowRouterWithParamAndCallback(@"/jj/l", @{@"g":@"h"},^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
-//        NSLog(@"param    %@",param);
-//    });
-    
-//    UIViewController *vc = HMGetControllerWithCallback(@"/jj/l", @{@"g":@"h"}, ^(NSString * name,NSDictionary *param){
-//        NSLog(@"param    %@",param);
-//    });
-    UIViewController *vc = HMGetController(@"/jj/l",  @{@"g":@"h"}, ^(NSString * _Nonnull name, NSDictionary * _Nonnull param) {
-        NSLog(@"param    %@",param);
-    });
-    [self presentViewController:vc animated:true completion:nil];
+
 }
 
 - (BOOL)showKeyWindow {
@@ -57,6 +41,9 @@
 }
 - (nonnull UIViewController *)rootVC {
     return self;
+}
+- (IBAction)action:(id)sender {
+    
 }
 
 @synthesize param;

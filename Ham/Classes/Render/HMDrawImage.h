@@ -22,6 +22,12 @@ typedef void(^DrawCallBlock)(CGContextRef ctx,HMDrawImage* draw);
 
 @property (nonatomic, assign) BOOL hasAlpha;
 
+@property (nonatomic,readonly) CIImage *ciImage;
+
+@property (nonatomic,readonly) UIImage *uiImage;
+
+@property (nonatomic,readonly) CGImageRef cgImage;
+
 - (instancetype)initWithSize:(CGSize)size ForCallback:(DrawCallBlock)call;
 
 - (instancetype)initWithSize:(CGSize)size isPNG:(BOOL)flag ForCallback:(DrawCallBlock)call;
@@ -38,4 +44,6 @@ CGContextRef createContext(CGSize size,CGFloat scale,void* _Nullable bitmapBuffe
 CGContextRef createContextNoAlpha(CGSize size,CGFloat scale,CGColorRef fillColor,void* _Nullable bitmapBuffer);
 CGImageRef CGBitContextExportPNG(CGContextRef ctx,CGFloat quality);
 CGImageRef CGBitContextExportJPG(CGContextRef ctx,CGFloat quality);
+CIImage * CGBitmapContextGetCIImage(CGContextRef ctx);
+CGImageRef CGBitMapExportPNG(CGImageRef img,CGFloat quality);
 NS_ASSUME_NONNULL_END
