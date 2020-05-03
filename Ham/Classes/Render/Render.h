@@ -6,3 +6,4 @@
 //
 #import<Ham/HMBundle.h>
 #import<Ham/HMDrawImage.h>
+#import<Ham/HMRenderImage.h>

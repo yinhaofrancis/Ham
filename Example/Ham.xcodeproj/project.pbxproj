@@ -17,6 +17,7 @@
 		A910C694244993F6000540AB /* HMMaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A910C692244993F6000540AB /* HMMaskViewController.m */; };
 		A910C695244993F6000540AB /* HMMaskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A910C693244993F6000540AB /* HMMaskViewController.xib */; };
 		A910C6A02449C1F0000540AB /* HMNVVVViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A910C69F2449C1F0000540AB /* HMNVVVViewController.m */; };
+		A91A6ED9245F1348006EF16A /* HMRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = A91A6ED8245F1348006EF16A /* HMRSA.m */; };
 		A944AA052432D7DF00705119 /* HMModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A944AA042432D7DF00705119 /* HMModel.m */; };
 		A944AA082432E02500705119 /* HMJSONPaser.m in Sources */ = {isa = PBXBuildFile; fileRef = A944AA072432E02500705119 /* HMJSONPaser.m */; };
 		A96FC43C245AC3D1001AC023 /* HMEEEViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96FC43A245AC3D1001AC023 /* HMEEEViewController.m */; };
@@ -56,6 +57,8 @@
 		A910C693244993F6000540AB /* HMMaskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HMMaskViewController.xib; sourceTree = "<group>"; };
 		A910C69E2449C1F0000540AB /* HMNVVVViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HMNVVVViewController.h; sourceTree = "<group>"; };
 		A910C69F2449C1F0000540AB /* HMNVVVViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HMNVVVViewController.m; sourceTree = "<group>"; };
+		A91A6ED7245F1348006EF16A /* HMRSA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HMRSA.h; sourceTree = "<group>"; };
+		A91A6ED8245F1348006EF16A /* HMRSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HMRSA.m; sourceTree = "<group>"; };
 		A944AA032432D7DF00705119 /* HMModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HMModel.h; sourceTree = "<group>"; };
 		A944AA042432D7DF00705119 /* HMModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HMModel.m; sourceTree = "<group>"; };
 		A944AA062432E02500705119 /* HMJSONPaser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HMJSONPaser.h; sourceTree = "<group>"; };
@@ -170,6 +173,8 @@
 				A910C69F2449C1F0000540AB /* HMNVVVViewController.m */,
 				A97B6D3F2428ABF40044C6AD /* HMTestSceneViewController.h */,
 				A97B6D402428ABF40044C6AD /* HMTestSceneViewController.m */,
+				A91A6ED7245F1348006EF16A /* HMRSA.h */,
+				A91A6ED8245F1348006EF16A /* HMRSA.m */,
 				A944AA032432D7DF00705119 /* HMModel.h */,
 				A944AA042432D7DF00705119 /* HMModel.m */,
 				A944AA062432E02500705119 /* HMJSONPaser.h */,
@@ -340,6 +345,7 @@
 				A9F7CDCC245C78E9004A182F /* HMTableViewCell.m in Sources */,
 				A96FC43C245AC3D1001AC023 /* HMEEEViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				A91A6ED9245F1348006EF16A /* HMRSA.m in Sources */,
 				A9D3C532244979140087C555 /* UIResponder+HMResponder.m in Sources */,
 				A910C6A02449C1F0000540AB /* HMNVVVViewController.m in Sources */,
 			);

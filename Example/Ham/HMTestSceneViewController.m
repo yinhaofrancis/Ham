@@ -12,7 +12,9 @@
 #import "HMJSONPaser.h"
 #import "HMMaskViewController.h"
 #import <GLKit/GLKit.h>
+#import <Security/Security.h>
 #import "HMRenderImage.h"
+#import "HMRSA.h"
 @interface HMTestSceneViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgs;
@@ -37,13 +39,23 @@
 - (BOOL)showKeyWindow {
     return true;
 }
-- (void)handleCallbackWithName:(NSString *)name param:(NSDictionary *)param{
-    
-}
+
 - (nonnull UIViewController *)rootVC {
     return self;
 }
 - (IBAction)action:(id)sender {
+    HMkeyPair *kp = [HMkeyPair KeyRSAPair:HMKeySize2048];
+    NSLog(@"%@",kp);
+    HMRSA *rsa = [[HMRSA alloc] initWithKeyPair:kp];
+    NSData *data = [rsa encrypt:[@"123456" dataUsingEncoding:NSUTF8StringEncoding]];
+    NSData *newd = [rsa decrypt:data];
+    
+    NSData* key = [rsa sign:data];
+    
+    BOOL b = [rsa verify:data signKey:key];
+ 
+    NSString *a = [NSString.alloc initWithData:newd encoding:NSUTF8StringEncoding];
+    NSLog(@"{{{{{{{%@",a);
     [[[HMRenderImage shared] draw:^(CGContextRef _Nonnull ctx, CGRect rect) {
         CGContextSetFillColorWithColor(ctx, UIColor.whiteColor.CGColor);
         CGContextFillRect(ctx,rect);

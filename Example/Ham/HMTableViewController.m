@@ -54,9 +54,6 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 80;
 }
-- (IBAction)close:(id)sender {
-    [[HMRenderImage shared] cancelAllWork];
-}
 
 
 @end

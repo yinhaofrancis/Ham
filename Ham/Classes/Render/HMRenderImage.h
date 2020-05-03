@@ -26,11 +26,13 @@ typedef void(^getImageBlock)(UIImage *);
 
 @property (nonatomic,readonly) CGSize contextSize;
 
--(instancetype)draw:(renderBlock)callback;
+- (HMRenderImage *)draw:(renderBlock)callback;
 
--(NSString *)drawSize:(CGSize)size callback:(getImageBlock)call;
+- (NSString *)drawSize:(CGSize)size callback:(getImageBlock)call;
 
-+(instancetype)shared;
++ (instancetype)shared;
+
+- (instancetype)initWithContextSize:(CGSize)size;
 
 @end
 

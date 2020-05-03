@@ -10,16 +10,16 @@
 #import "HMDrawImage.h"
 #import <Metal/Metal.h>
 @implementation HMRenderImage{
-    renderBlock _render;
-    dispatch_queue_t _queue;
     
+    renderBlock _render;
+    
+    dispatch_queue_t _queue;
 }
 
-
-- (instancetype)init {
+- (instancetype)initWithContextSize:(CGSize)size {
     self = [super init];
     if(self) {
-        _contextSize = UIScreen.mainScreen.bounds.size;
+        _contextSize = size;
         _cgContext = createContext(self.contextSize, UIScreen.mainScreen.scale, nil);
         _ciContext = [CIContext contextWithOptions:@{
             kCIContextPriorityRequestLow:@1,
@@ -29,6 +29,10 @@
         _queue = dispatch_queue_create("", aa);
     }
     return self;
+}
+
+- (instancetype)init {
+    return [self initWithContextSize:UIScreen.mainScreen.bounds.size];
 }
 - (instancetype)draw:(renderBlock)callback{
     _render = [callback copy];
@@ -77,8 +81,5 @@
     });
     return render;
 }
-- (void)dealloc
-{
-    [self cancelAllWork];
-}
+
 @end
