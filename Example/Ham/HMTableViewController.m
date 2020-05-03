@@ -35,13 +35,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HMTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     for (UIImageView * v in cell.imms) {
+        
         [[[HMRenderImage shared] draw:^(CGContextRef _Nonnull ctx, CGRect rect) {
             CGPathRef p = CGPathCreateWithRoundedRect(rect, 24, 24, nil);
             CGContextAddPath(ctx, p);
             CGPathRelease(p);
             CGContextClip(ctx);
             CGContextDrawImage(ctx, rect, [UIImage imageNamed:@"p"].CGImage);
-            
+            NSLog(@"int");
         }] drawSize:CGSizeMake(100, 100) callback:^(UIImage * _Nonnull img) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 v.image = img;
@@ -53,8 +54,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 80;
 }
-- (void)didReceiveMemoryWarning{
-    [self.navigationController popViewControllerAnimated:true];
+- (IBAction)close:(id)sender {
+    [[HMRenderImage shared] cancelAllWork];
 }
+
 
 @end

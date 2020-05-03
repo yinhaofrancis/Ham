@@ -221,8 +221,6 @@ CIImage * CGBitmapContextGetCIImage(CGContextRef ctx) {
     
     NSUInteger len = pr * h;
     
-    
-    
     NSData* data = [[NSData alloc] initWithBytes:CGBitmapContextGetData(ctx) length:len];
     return [[CIImage alloc] initWithBitmapData:data bytesPerRow:pr size:CGSizeMake(w, h) format:kCIFormatRGBA8 colorSpace:CGBitmapContextGetColorSpace(ctx)];
 }

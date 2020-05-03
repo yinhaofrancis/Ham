@@ -19,8 +19,12 @@
 - (instancetype)init {
     self = [super init];
     if(self) {
-        _cgContext = createContext(UIScreen.mainScreen.bounds.size, UIScreen.mainScreen.scale, nil);
-        _ciContext = [CIContext contextWithCGContext:_cgContext options:nil];
+        _contextSize = UIScreen.mainScreen.bounds.size;
+        _cgContext = createContext(self.contextSize, UIScreen.mainScreen.scale, nil);
+        _ciContext = [CIContext contextWithOptions:@{
+            kCIContextPriorityRequestLow:@1,
+            kCIContextUseSoftwareRenderer:@1
+        }];
         dispatch_queue_attr_t aa =  dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0);
         _queue = dispatch_queue_create("", aa);
     }
@@ -28,22 +32,35 @@
 }
 - (instancetype)draw:(renderBlock)callback{
     _render = [callback copy];
+    _drawWorkFlow = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:100];
     return self;
 }
-- (void)drawSize:(CGSize)size callback:(getImageBlock)call {
-    dispatch_async(_queue, ^{
+- (NSString *)drawSize:(CGSize)size callback:(getImageBlock)call {
+    NSString *uuid = NSUUID.UUID.UUIDString;
+    dispatch_block_t t = ^{
         CGContextFlush(self.cgContext);
         CGRect rect = CGRectMake(0, 0, size.width, size.height);
         self->_render(self.cgContext,rect);
-        CGRect exend = CGRectMake(rect.origin.x * UIScreen.mainScreen.scale, rect.origin.y * UIScreen.mainScreen.scale, rect.size.width * UIScreen.mainScreen.scale, rect.size.height * UIScreen.mainScreen.scale);
-        CIImage *cimg = self.ciImage;
-        CGImageRef img = [self.ciContext createCGImage:cimg fromRect:exend];
+        CGFloat delta = self.contextSize.height * UIScreen.mainScreen.scale - rect.size.height * UIScreen.mainScreen.scale;
+        CGRect exend = CGRectMake(rect.origin.x * UIScreen.mainScreen.scale,
+                                  rect.origin.y * UIScreen.mainScreen.scale + delta,
+                                  rect.size.width * UIScreen.mainScreen.scale,
+                                  rect.size.height * UIScreen.mainScreen.scale);
+        CGImageRef cimg = CGBitmapContextCreateImage(self.cgContext);
         
-        UIImage * uimg =[[UIImage alloc] initWithCGImage:img scale:UIScreen.mainScreen.scale orientation:UIImageOrientationUp];
-        
-        CGImageRelease(img);
+        CGImageRef img = CGImageCreateWithImageInRect(cimg, exend);
+        CGImageRef png = CGBitMapExportPNG(img,1);
+        UIImage * uimg =[[UIImage alloc] initWithCGImage:png scale:UIScreen.mainScreen.scale orientation:UIImageOrientationUp];
+        CGImageRelease(cimg);
+        CGImageRelease(png);
         call(uimg);
-    });
+    };
+    
+    [self.drawWorkFlow setObject:t forKey:uuid];
+    t =  dispatch_block_create(DISPATCH_BLOCK_DETACHED, t);
+    dispatch_async(_queue, t);
+    
+    return uuid;
 }
 
 - (CGImageRef)createPNGImage:(CIImage *)img size:(CGRect)exend{
@@ -52,6 +69,23 @@
 - (CIImage *)ciImage{
     return CGBitmapContextGetCIImage(_cgContext);
 }
+- (void)cancel:(NSString *)workName{
+    dispatch_block_t b = [self.drawWorkFlow objectForKey:workName];
+    if(b){
+        if(dispatch_block_testcancel(b) == 0){
+            dispatch_block_cancel(b);
+        }
+    }
+}
+- (void)cancelAllWork{
+    dispatch_block_t obj;
+    NSEnumerator<dispatch_block_t> *em = [self.drawWorkFlow objectEnumerator];
+    while ((obj = em.nextObject)) {
+        if(dispatch_block_testcancel(obj) == 0){
+            dispatch_block_cancel(obj);
+        }
+    }
+}
 + (instancetype)shared{
     static HMRenderImage* render;
     static dispatch_once_t onceToken;
@@ -59,5 +93,9 @@
         render = [HMRenderImage new];
     });
     return render;
+}
+- (void)dealloc
+{
+    [self cancelAllWork];
 }
 @end

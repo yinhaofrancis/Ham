@@ -22,9 +22,17 @@ typedef void(^getImageBlock)(UIImage *);
 
 @property (nonatomic,readonly) CIImage *ciImage;
 
+@property (nonatomic,readonly) NSMapTable *drawWorkFlow;
+
+@property (nonatomic,readonly) CGSize contextSize;
+
 -(instancetype)draw:(renderBlock)callback;
 
--(void)drawSize:(CGSize)size callback:(getImageBlock)call;
+-(NSString *)drawSize:(CGSize)size callback:(getImageBlock)call;
+
+-(void)cancel:(NSString *)workName;
+
+-(void)cancelAllWork;
 
 +(instancetype)shared;
 
