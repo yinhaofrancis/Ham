@@ -30,10 +30,6 @@ typedef void(^getImageBlock)(UIImage *);
 
 -(NSString *)drawSize:(CGSize)size callback:(getImageBlock)call;
 
--(void)cancel:(NSString *)workName;
-
--(void)cancelAllWork;
-
 +(instancetype)shared;
 
 @end

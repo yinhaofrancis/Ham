@@ -69,23 +69,6 @@
 - (CIImage *)ciImage{
     return CGBitmapContextGetCIImage(_cgContext);
 }
-- (void)cancel:(NSString *)workName{
-    dispatch_block_t b = [self.drawWorkFlow objectForKey:workName];
-    if(b){
-        if(dispatch_block_testcancel(b) == 0){
-            dispatch_block_cancel(b);
-        }
-    }
-}
-- (void)cancelAllWork{
-    dispatch_block_t obj;
-    NSEnumerator<dispatch_block_t> *em = [self.drawWorkFlow objectEnumerator];
-    while ((obj = em.nextObject)) {
-        if(dispatch_block_testcancel(obj) == 0){
-            dispatch_block_cancel(obj);
-        }
-    }
-}
 + (instancetype)shared{
     static HMRenderImage* render;
     static dispatch_once_t onceToken;
