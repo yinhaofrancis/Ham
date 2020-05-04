@@ -16,7 +16,7 @@
 #import <Ham/HMEnv.h>
 #import <Ham/HMProxy.h>
 #import <Ham/HMCrypto.h>
-
+#import <Ham/HMRSA.h>
 #import <Ham/HMOCRunTimeTool.h>
 
 #ifdef HMIOS
