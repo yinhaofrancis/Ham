@@ -55,7 +55,7 @@
     BOOL b = [rsa verify:data signKey:key];
  
     NSString *a = [NSString.alloc initWithData:newd encoding:NSUTF8StringEncoding];
-    NSLog(@"{{{{{{{%@",a);
+    NSLog(@"%@,,%@",a,@(b)) ;
     [[[HMRenderImage shared] draw:^(CGContextRef _Nonnull ctx, CGRect rect) {
         CGContextSetFillColorWithColor(ctx, UIColor.whiteColor.CGColor);
         CGContextFillRect(ctx,rect);
