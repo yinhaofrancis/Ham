@@ -23,7 +23,7 @@
         [self callbackWithName:@"haha" param:nil];
         [self dismissViewControllerAnimated:true completion:nil];
     });
-
+    
 }
 
 @synthesize controllerManager;
@@ -51,6 +51,4 @@
 
 @end
 
-
-@HMKeyController("/dddd/ddd", HMNVVVViewController)
 //@HMComponent(HMBackgroundFetch, HMNVVVViewController)

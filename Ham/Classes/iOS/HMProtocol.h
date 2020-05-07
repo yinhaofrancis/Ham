@@ -23,6 +23,12 @@ class controller; \
 class controller; \
 char const * HMConr_##controller##_contr_Annotation HMDATA(HMSectCustom) =  "{\"HMSectCtrl\":{ \"" router"\" :\""#controller"\"}}";
 
+
+
+#define HMNextKeyController(key,router,controller) \
+class controller; \
+char const * HMConr_##controller##_contr##key##_Annotation HMDATA(HMSectCustom) =  "{\"HMSectCtrl\":{ \"" router"\" :\""#controller"\"}}";
+
 #define HMNibController(router,bundleId) \
 HMCustomAnnotationString(HMSectCtrl,router,bundleId)
 
