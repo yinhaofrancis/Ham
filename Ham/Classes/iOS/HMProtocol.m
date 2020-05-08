@@ -20,3 +20,7 @@ inline BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleC
 inline UIViewController* HMGetControllerWithContext(NSString * name,NSDictionary  * _Nullable  param,id<HMControllerCallback> context){
     return [InstantProtocol(HMControllerManager) dequeueViewController:name param:param context:context];
 }
+
+inline BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindow* window ,handleControllerCallback _Nullable callback){
+    return [InstantProtocol(HMRouterController) showRoutePresent:name withParam:param inWindow:window callback:callback];
+}

@@ -46,6 +46,8 @@ UIViewController* HMGetControllerWithContext(NSString * name,NSDictionary  * _Nu
 
 BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
 
+BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindow * window,handleControllerCallback _Nullable callback);
+
 @protocol HMControllerManager <NSObject>
 
 - (UIViewController *)dequeueViewController:(NSString *)name param:(nullable NSDictionary *)param context:(nullable id)ctx;
@@ -91,7 +93,14 @@ BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleControll
 
 @optional
 
-- (BOOL)showRoute:(NSString *)name withParam:(nullable NSDictionary *)param callback:(nullable handleControllerCallback)callback;
+- (BOOL)showRoute:(NSString *)name
+        withParam:(nullable NSDictionary *)param
+         callback:(nullable handleControllerCallback)callback;
+
+- (BOOL)showRoutePresent:(NSString *)name
+               withParam:(nullable NSDictionary *)param
+                inWindow:(UIWindow *)window
+                callback:(nullable handleControllerCallback)callback;
 
 @end
 
