@@ -15,6 +15,7 @@
 #import <Security/Security.h>
 #import "HMRenderImage.h"
 #import "HMRSA.h"
+#import <MetalPerformanceShaders/MetalPerformanceShaders.h>
 @interface HMTestSceneViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgs;
@@ -27,7 +28,7 @@
 @implementation HMTestSceneViewController
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+    [super viewDidLoad];  
 }
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
@@ -45,7 +46,7 @@
 }
 - (IBAction)action:(id)sender {
     HMkeyPair *kp = [HMkeyPair KeyRSAPair:HMKeySize2048];
-    NSLog(@"%@",kp);
+    
     HMRSA *rsa = [[HMRSA alloc] initWithKeyPair:kp];
     NSData *data = [rsa encrypt:[@"123456" dataUsingEncoding:NSUTF8StringEncoding]];
     NSData *newd = [rsa decrypt:data];

@@ -18,12 +18,6 @@ typedef void(^getImageBlock)(UIImage *);
 
 @property (nonatomic,readonly) CGContextRef cgContext;
 
-@property (nonatomic,readonly) CIContext *ciContext;
-
-@property (nonatomic,readonly) CIImage *ciImage;
-
-@property (nonatomic,readonly) NSMapTable *drawWorkFlow;
-
 @property (nonatomic,readonly) CGSize contextSize;
 
 - (HMRenderImage *)draw:(renderBlock)callback;

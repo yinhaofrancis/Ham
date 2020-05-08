@@ -21,12 +21,8 @@
     if(self) {
         _contextSize = size;
         _cgContext = createContext(self.contextSize, UIScreen.mainScreen.scale, nil);
-        _ciContext = [CIContext contextWithOptions:@{
-            kCIContextPriorityRequestLow:@1,
-            kCIContextUseSoftwareRenderer:@1
-        }];
-        dispatch_queue_attr_t aa =  dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0);
-        _queue = dispatch_queue_create("", aa);
+        dispatch_queue_attr_t aa =  dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qos_class_main(), 0);
+        _queue = dispatch_queue_create("HMRenderImage", aa);
     }
     return self;
 }
@@ -36,7 +32,6 @@
 }
 - (instancetype)draw:(renderBlock)callback{
     _render = [callback copy];
-    _drawWorkFlow = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:100];
     return self;
 }
 - (NSString *)drawSize:(CGSize)size callback:(getImageBlock)call {
@@ -60,15 +55,10 @@
         call(uimg);
     };
     
-    [self.drawWorkFlow setObject:t forKey:uuid];
     t =  dispatch_block_create(DISPATCH_BLOCK_DETACHED, t);
     dispatch_async(_queue, t);
     
     return uuid;
-}
-
-- (CGImageRef)createPNGImage:(CIImage *)img size:(CGRect)exend{
-    return CGBitMapExportPNG([self.ciContext createCGImage:img fromRect:exend],1);
 }
 - (CIImage *)ciImage{
     return CGBitmapContextGetCIImage(_cgContext);
