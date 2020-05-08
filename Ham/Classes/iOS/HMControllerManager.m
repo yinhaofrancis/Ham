@@ -124,7 +124,20 @@
     }
     return false;
 }
-
+- (BOOL)showRoutePresent:(NSString *)name
+               withParam:(NSDictionary *)param
+                inWindow:(nonnull UIWindow *)window
+                callback:(handleControllerCallback)callback{
+    UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[[HMCallBack alloc] initWithCallBack:callback]];
+    if(!vc)
+        return false;
+    UIViewController * pvc = window.rootViewController;
+    while ([pvc presentedViewController]) {
+        pvc = pvc.presentedViewController;
+    }
+    [pvc presentViewController:vc animated:true completion:nil];
+    return true;
+}
 - (instancetype)init
 {
     self = [super init];

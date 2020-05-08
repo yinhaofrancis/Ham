@@ -91,3 +91,5 @@
 synthesizeAssociatedProperty(HMCopy, haha)
 
 @end
+@HMKeyController("/dddd/dddd", HMNVVVViewController)
+@HMNextKeyController(2,"/dddd/ddddd",HMNVVVViewController)

@@ -51,6 +51,4 @@
 
 @end
 
-
-@HMKeyController("/dddd/ddd", HMNVVVViewController)
 //@HMComponent(HMBackgroundFetch, HMNVVVViewController)

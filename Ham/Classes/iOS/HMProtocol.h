@@ -23,6 +23,12 @@ class controller; \
 class controller; \
 char const * HMConr_##controller##_contr_Annotation HMDATA(HMSectCustom) =  "{\"HMSectCtrl\":{ \"" router"\" :\""#controller"\"}}";
 
+
+
+#define HMNextKeyController(key,router,controller) \
+class controller; \
+char const * HMConr_##controller##_contr##key##_Annotation HMDATA(HMSectCustom) =  "{\"HMSectCtrl\":{ \"" router"\" :\""#controller"\"}}";
+
 #define HMNibController(router,bundleId) \
 HMCustomAnnotationString(HMSectCtrl,router,bundleId)
 
@@ -39,6 +45,8 @@ UIViewController* HMGetController(NSString * name,NSDictionary  * _Nullable  par
 UIViewController* HMGetControllerWithContext(NSString * name,NSDictionary  * _Nullable  param,id<HMControllerCallback> context);
 
 BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
+
+BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindow * window,handleControllerCallback _Nullable callback);
 
 @protocol HMControllerManager <NSObject>
 
@@ -85,7 +93,14 @@ BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleControll
 
 @optional
 
-- (BOOL)showRoute:(NSString *)name withParam:(nullable NSDictionary *)param callback:(nullable handleControllerCallback)callback;
+- (BOOL)showRoute:(NSString *)name
+        withParam:(nullable NSDictionary *)param
+         callback:(nullable handleControllerCallback)callback;
+
+- (BOOL)showRoutePresent:(NSString *)name
+               withParam:(nullable NSDictionary *)param
+                inWindow:(UIWindow *)window
+                callback:(nullable handleControllerCallback)callback;
 
 @end
 
