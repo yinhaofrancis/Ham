@@ -131,11 +131,14 @@
     UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[[HMCallBack alloc] initWithCallBack:callback]];
     if(!vc)
         return false;
-    UIViewController * pvc = window.rootViewController;
-    while ([pvc presentedViewController]) {
-        pvc = pvc.presentedViewController;
-    }
-    [pvc presentViewController:vc animated:true completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIViewController * pvc = window.rootViewController;
+        while ([pvc presentedViewController]) {
+            pvc = pvc.presentedViewController;
+        }
+        [pvc presentViewController:vc animated:true completion:^{
+        }];
+    });
     return true;
 }
 - (instancetype)init
