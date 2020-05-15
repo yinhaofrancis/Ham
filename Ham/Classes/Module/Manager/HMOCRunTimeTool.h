@@ -47,10 +47,6 @@ typedef void(^didSetBlock)(id,void * _Nullable);
 
 +(NSDictionary<NSString *,NSString *> *)propertyKeyTypeInClass:(Class)cls;
 
-//+ (BOOL)addPropertyDidSet:(NSString*)name
-//             instantClass:(Class)cls
-//              didSetBlock:(didSetBlock)block;
-
 /// 实现protocol
 /// @param proto 协议
 /// @param selector selector

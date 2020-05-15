@@ -18,6 +18,7 @@ typedef NS_ENUM(NSUInteger, HMModuleMemoryType) {
 + (HMModuleMemoryType) memoryType;
 @optional
 +(BOOL) isAsync;
+- (instancetype)initWithParam:(NSDictionary *)param;
 @end
 
 @protocol HMModuleThreadConfigure <NSObject>

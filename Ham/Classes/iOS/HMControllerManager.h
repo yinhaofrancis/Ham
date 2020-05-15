@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HMControllerManagerImp : NSObject<HMModule,HMControllerManager,HMRouterController>
 @property (nonatomic,strong) NSMutableArray<HMWeakContainer *> *routers;
+@property (nonatomic,strong) NSHashTable *activeViewController;
 @end
 
 NS_ASSUME_NONNULL_END

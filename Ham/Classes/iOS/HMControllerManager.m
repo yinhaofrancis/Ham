@@ -109,6 +109,7 @@
             }
         }];
     }
+    [self.activeViewController addObject:obj];
     return obj;
 }
 + (HMModuleMemoryType)memoryType {
@@ -145,7 +146,7 @@
 {
     self = [super init];
     if (self) {
-
+        self.activeViewController = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory capacity:10];
     }
     return self;
 }
