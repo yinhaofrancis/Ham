@@ -34,6 +34,7 @@
 
 - (void)addJSObject:(HMJSObject *)object{
     jso[object.functionName] = object;
+    [_configure.userContentController removeScriptMessageHandlerForName:object.functionName];
     [_configure.userContentController addScriptMessageHandler:object name:object.functionName];
 }
 - (void)removeJSObject:(HMJSObject *)object{
