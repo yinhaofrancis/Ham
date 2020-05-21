@@ -15,11 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,readonly) handleControllerCallback callback;
 - (instancetype)initWithCallBack:(handleControllerCallback)callback;
 @end
+@interface HMVCBackUp : NSObject
+@property(nonatomic,strong) UIViewController* vc;
+@property(nonatomic,copy) NSString *name;
 
-
-@interface HMControllerManagerImp : NSObject<HMModule,HMControllerManager,HMRouterController>
+@end
+@interface HMControllerManagerImp : NSObject<HMModule,HMControllerManager,HMRoute>
 @property (nonatomic,strong) NSMutableArray<HMWeakContainer *> *routers;
 @property (nonatomic,strong) NSHashTable *activeViewController;
+@property (nonatomic,strong) NSMutableArray<HMVCBackUp *> *backup;
 @end
 
 NS_ASSUME_NONNULL_END

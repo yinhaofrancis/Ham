@@ -13,7 +13,7 @@
 #import "HMOCRunTimeTool.h"
 //static NSMutableDictionary *dc;
 @HMService(HMControllerManager,HMControllerManagerImp)
-@HMService(HMRouterController,HMControllerManagerImp)
+@HMService(HMRoute,HMControllerManagerImp)
 
 @implementation HMControllerManagerImp
 - (UIViewController *)dequeueViewController:(NSString *)name param:(NSDictionary *)param context:(nullable id)ctx{
@@ -87,11 +87,18 @@
         }
         [self.routers addObject:w];
         __weak id<HMRoute> o = (id<HMRoute>)obj;
-        [HMOCRunTimeTool classImplamentProtocol:@protocol(HMRouterController) selector:@selector(showRoute:withParam:callback:) toClass:obj.class imp:^BOOL (id<HMRoute> s,NSString *name,NSDictionary * param ,handleControllerCallback call) {
+        [HMOCRunTimeTool classImplamentProtocol:@protocol(HMRoute) selector:@selector(showRoute:withParam:callback:) toClass:obj.class imp:^BOOL (id<HMRoute> s,NSString *name,NSDictionary * param ,handleControllerCallback call) {
             
             UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[HMCallBack.alloc initWithCallBack:call]];
             if(vc){
-                [o displayViewController:vc WithName:name];
+                if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive) {
+                    
+                }else{
+                    HMVCBackUp* b = [[HMVCBackUp alloc] init];
+                    b.vc = vc;
+                    b.name = name;
+                    [self.backup addObject:b];
+                }
                 return true;
             }else {
                 return false;
@@ -119,7 +126,7 @@
     while (!self.routers.lastObject.content && self.routers.count > 0) {
         [self.routers removeLastObject];
     }
-    id<HMRouterController> ro = (id<HMRouterController>)self.routers.lastObject.content;
+    id<HMRoute> ro = (id<HMRoute>)self.routers.lastObject.content;
     if(ro){
         return [ro showRoute:name withParam:param callback:callback];
     }
@@ -142,11 +149,27 @@
     });
     return true;
 }
+
+- (void)displayViewController:(nonnull UIViewController *)vc WithName:(nonnull NSString *)name {
+    
+}
+
+- (void)handleApplicationActive{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (HMVCBackUp* v in self.backup) {
+            id<HMRoute> ro = (id<HMRoute>)self.routers.lastObject.content;
+            [ro displayViewController:v.vc WithName:v.name];
+        }
+        [self.backup removeAllObjects];
+    });
+}
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         self.activeViewController = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory capacity:10];
+        self.backup = [NSMutableArray new];
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(handleApplicationActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;
 }
@@ -175,3 +198,8 @@
 
 
 
+@implementation HMVCBackUp
+
+
+
+@end

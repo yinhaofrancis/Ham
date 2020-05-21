@@ -22,13 +22,11 @@ typedef void(^getImageBlock)(UIImage *);
 
 @property (nonatomic,readonly) CIImage *ciImage;
 
-@property (nonatomic,readonly) NSMapTable *drawWorkFlow;
-
 @property (nonatomic,readonly) CGSize contextSize;
 
 - (HMRenderImage *)draw:(renderBlock)callback;
 
-- (NSString *)drawSize:(CGSize)size callback:(getImageBlock)call;
+- (void)drawSize:(CGSize)size callback:(getImageBlock)call;
 
 + (instancetype)shared;
 

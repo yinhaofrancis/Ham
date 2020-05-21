@@ -9,9 +9,12 @@
 #import "HMRenderImage.h"
 #import "HMDrawImage.h"
 #import <Metal/Metal.h>
+@interface HMRenderImage()
+@property (nonatomic,assign) NSInteger retainNumber;
+@end
 @implementation HMRenderImage{
     
-    renderBlock _render;
+    NSMutableArray<renderBlock> * _render;
     
     dispatch_queue_t _queue;
 }
@@ -20,7 +23,7 @@
     self = [super init];
     if(self) {
         _contextSize = size;
-        _cgContext = createContext(self.contextSize, UIScreen.mainScreen.scale, nil);
+        _render = [NSMutableArray new];
         _ciContext = [CIContext contextWithOptions:@{
             kCIContextPriorityRequestLow:@1,
             kCIContextUseSoftwareRenderer:@1
@@ -35,16 +38,15 @@
     return [self initWithContextSize:UIScreen.mainScreen.bounds.size];
 }
 - (instancetype)draw:(renderBlock)callback{
-    _render = [callback copy];
-    _drawWorkFlow = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:100];
+    [_render addObject:[callback copy]];
     return self;
 }
-- (NSString *)drawSize:(CGSize)size callback:(getImageBlock)call {
-    NSString *uuid = NSUUID.UUID.UUIDString;
-    dispatch_block_t t = ^{
+- (void)drawSize:(CGSize)size callback:(getImageBlock)call {
+    [self doRetain];
+    dispatch_async(_queue, ^{
         CGContextFlush(self.cgContext);
         CGRect rect = CGRectMake(0, 0, size.width, size.height);
-        self->_render(self.cgContext,rect);
+        self->_render.firstObject(self.cgContext,rect);
         CGFloat delta = self.contextSize.height * UIScreen.mainScreen.scale - rect.size.height * UIScreen.mainScreen.scale;
         CGRect exend = CGRectMake(rect.origin.x * UIScreen.mainScreen.scale,
                                   rect.origin.y * UIScreen.mainScreen.scale + delta,
@@ -58,13 +60,9 @@
         CGImageRelease(cimg);
         CGImageRelease(png);
         call(uimg);
-    };
-    
-    [self.drawWorkFlow setObject:t forKey:uuid];
-    t =  dispatch_block_create(DISPATCH_BLOCK_DETACHED, t);
-    dispatch_async(_queue, t);
-    
-    return uuid;
+        [self->_render removeObjectAtIndex:0];
+        [self doRelease];
+    });
 }
 
 - (CGImageRef)createPNGImage:(CIImage *)img size:(CGRect)exend{
@@ -80,6 +78,18 @@
         render = [HMRenderImage new];
     });
     return render;
+}
+- (void)doRetain{
+    self.retainNumber += 1;
+    if(self.retainNumber > 0){
+        _cgContext = createContext(self.contextSize, UIScreen.mainScreen.scale, nil);
+    }
+}
+- (void)doRelease{
+    self.retainNumber -= 1;
+    if(self.retainNumber <= 0){
+        CGContextRelease(_cgContext);
+    }
 }
 
 @end

@@ -41,9 +41,19 @@
     if(fetchConfig){
         [UIApplication.sharedApplication setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     }
+    for (NSString* key in componentInst) {
+        if([componentInst[key] respondsToSelector:_cmd]){
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                [componentInst[key] performSelector:_cmd withObject:application withObject:launchOptions];
+            #pragma clang diagnostic pop
+        }
+    }
     return YES;
 }
-
+//- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
+//
+//}
 - (UIViewController *)rootVC{
     NSString* name = [HMEnv.shared readConfig:@"rootVC"];
     if(name.length == 0){

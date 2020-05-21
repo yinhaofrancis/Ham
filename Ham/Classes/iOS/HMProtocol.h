@@ -89,8 +89,10 @@ BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindo
 
 @end
 
-@protocol HMRouterController <NSObject>
 
+@protocol HMRoute <NSObject>
+
+- (void) displayViewController:(UIViewController *)vc WithName:(NSString *)name;
 @optional
 
 - (BOOL)showRoute:(NSString *)name
@@ -101,13 +103,6 @@ BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindo
                withParam:(nullable NSDictionary *)param
                 inWindow:(UIWindow *)window
                 callback:(nullable handleControllerCallback)callback;
-
-@end
-
-@protocol HMRoute <HMRouterController>
-
-- (void) displayViewController:(UIViewController *)vc WithName:(NSString *)name;
-
 @end
 
 @protocol HMResourceLoader <NSObject>
