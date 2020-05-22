@@ -20,10 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,copy) NSString *name;
 
 @end
-@interface HMControllerManagerImp : NSObject<HMModule,HMControllerManager,HMRoute>
+@interface HMControllerManagerImp : NSObject<HMModule,HMControllerManager>
 @property (nonatomic,strong) NSMutableArray<HMWeakContainer *> *routers;
 @property (nonatomic,strong) NSHashTable *activeViewController;
 @property (nonatomic,strong) NSMutableArray<HMVCBackUp *> *backup;
+
 @end
 
 NS_ASSUME_NONNULL_END

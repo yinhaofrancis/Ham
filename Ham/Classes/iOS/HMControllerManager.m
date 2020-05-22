@@ -13,8 +13,6 @@
 #import "HMOCRunTimeTool.h"
 //static NSMutableDictionary *dc;
 @HMService(HMControllerManager,HMControllerManagerImp)
-@HMService(HMRoute,HMControllerManagerImp)
-
 @implementation HMControllerManagerImp
 - (UIViewController *)dequeueViewController:(NSString *)name param:(NSDictionary *)param context:(nullable id)ctx{
     UIViewController * vc = [self dequeueViewControllerInner:name param:param context:ctx];
@@ -86,24 +84,24 @@
             self.routers = [NSMutableArray new];
         }
         [self.routers addObject:w];
-        __weak id<HMRoute> o = (id<HMRoute>)obj;
-        [HMOCRunTimeTool classImplamentProtocol:@protocol(HMRoute) selector:@selector(showRoute:withParam:callback:) toClass:obj.class imp:^BOOL (id<HMRoute> s,NSString *name,NSDictionary * param ,handleControllerCallback call) {
-            
-            UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[HMCallBack.alloc initWithCallBack:call]];
-            if(vc){
-                if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive) {
-                    
-                }else{
-                    HMVCBackUp* b = [[HMVCBackUp alloc] init];
-                    b.vc = vc;
-                    b.name = name;
-                    [self.backup addObject:b];
-                }
-                return true;
-            }else {
-                return false;
-            }
-        }];
+//        __weak id<HMRoute> o = (id<HMRoute>)obj;
+//        [HMOCRunTimeTool classImplamentProtocol:@protocol(HMRoute) selector:@selector(showRoute:withParam:callback:) toClass:obj.class imp:^BOOL (id<HMRoute> s,NSString *name,NSDictionary * param ,handleControllerCallback call) {
+//
+//            UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[HMCallBack.alloc initWithCallBack:call]];
+//            if(vc){
+//                if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive) {
+//
+//                }else{
+//                    HMVCBackUp* b = [[HMVCBackUp alloc] init];
+//                    b.vc = vc;
+//                    b.name = name;
+//                    [self.backup addObject:b];
+//                }
+//                return true;
+//            }else {
+//                return false;
+//            }
+//        }];
     }
     if([obj conformsToProtocol:@protocol(HMManagedController)]){
         [HMOCRunTimeTool assignIVar:@{@"controllerManager":self} ToObject:obj];
@@ -128,7 +126,16 @@
     }
     id<HMRoute> ro = (id<HMRoute>)self.routers.lastObject.content;
     if(ro){
-        return [ro showRoute:name withParam:param callback:callback];
+        UIViewController* vc = HMGetController(name, param, callback);
+        if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive){
+            [ro displayViewController:vc WithName:name];
+        }else{
+            HMVCBackUp* b = [[HMVCBackUp alloc] init];
+            b.vc = vc;
+            b.name = name;
+            [self.backup addObject:b];
+        }
+        
     }
     return false;
 }

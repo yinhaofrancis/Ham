@@ -14,7 +14,7 @@ inline UIViewController* HMGetController(NSString * name,NSDictionary * param,ha
 
 
 inline BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback){
-    return [InstantProtocol(HMRoute) showRoute:name withParam:param callback:callback];
+    return [InstantProtocol(HMControllerManager) showRoute:name withParam:param callback:callback];
 }
 
 inline UIViewController* HMGetControllerWithContext(NSString * name,NSDictionary  * _Nullable  param,id<HMControllerCallback> context){
@@ -22,5 +22,5 @@ inline UIViewController* HMGetControllerWithContext(NSString * name,NSDictionary
 }
 
 inline BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindow* window ,handleControllerCallback _Nullable callback){
-    return [InstantProtocol(HMRoute) showRoutePresent:name withParam:param inWindow:window callback:callback];
+    return [InstantProtocol(HMControllerManager) showRoutePresent:name withParam:param inWindow:window callback:callback];
 }
