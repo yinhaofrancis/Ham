@@ -45,32 +45,7 @@
     return self;
 }
 - (IBAction)action:(id)sender {
-    HMkeyPair *kp = [HMkeyPair KeyRSAPair:HMKeySize2048];
     
-    HMRSA *rsa = [[HMRSA alloc] initWithKeyPair:kp];
-    NSData *data = [rsa encrypt:[@"123456" dataUsingEncoding:NSUTF8StringEncoding]];
-    NSData *newd = [rsa decrypt:data];
-    
-    NSData* key = [rsa sign:data];
-    
-    BOOL b = [rsa verify:data signKey:key];
- 
-    NSString *a = [NSString.alloc initWithData:newd encoding:NSUTF8StringEncoding];
-    NSLog(@"%@,,%@",a,@(b)) ;
-    [[[HMRenderImage shared] draw:^(CGContextRef _Nonnull ctx, CGRect rect) {
-        CGContextSetFillColorWithColor(ctx, UIColor.whiteColor.CGColor);
-        CGContextFillRect(ctx,rect);
-        CGContextSetFillColorWithColor(ctx, UIColor.systemBlueColor.CGColor);
-        CGContextFillEllipseInRect(ctx, CGRectInset(rect, 10, 10));
-    }] drawSize:CGSizeMake(100, 100) callback:^(UIImage * _Nonnull img) {
-        NSLog(@"%@,%lf,%@",img,img.scale,NSStringFromCGSize(img.size));
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.view.layer.contentsCenter = CGRectMake(0.49999, 0.49999, 0.00002, 0.00002);
-            self.view.layer.contents = (__bridge id _Nullable)(img.CGImage);
-            self.view.layer.contentsScale = UIScreen.mainScreen.scale;
-            self.imgs.image = img;
-        });
-    }];
 }
 
 @synthesize param;

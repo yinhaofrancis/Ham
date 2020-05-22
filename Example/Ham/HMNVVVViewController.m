@@ -33,6 +33,7 @@
 }
 + (HMModuleMemoryType)memoryType {
     return HMModuleWeakSinglten;
+    self respondsToSelector:<#(SEL)#>
 }
 
 - (void)application:(nonnull UIApplication *)application performFetchWithCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {

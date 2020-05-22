@@ -13,8 +13,6 @@
 #import "HMOCRunTimeTool.h"
 //static NSMutableDictionary *dc;
 @HMService(HMControllerManager,HMControllerManagerImp)
-@HMService(HMRouterController,HMControllerManagerImp)
-
 @implementation HMControllerManagerImp
 - (UIViewController *)dequeueViewController:(NSString *)name param:(NSDictionary *)param context:(nullable id)ctx{
     UIViewController * vc = [self dequeueViewControllerInner:name param:param context:ctx];
@@ -86,17 +84,24 @@
             self.routers = [NSMutableArray new];
         }
         [self.routers addObject:w];
-        __weak id<HMRoute> o = (id<HMRoute>)obj;
-        [HMOCRunTimeTool classImplamentProtocol:@protocol(HMRouterController) selector:@selector(showRoute:withParam:callback:) toClass:obj.class imp:^BOOL (id<HMRoute> s,NSString *name,NSDictionary * param ,handleControllerCallback call) {
-            
-            UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[HMCallBack.alloc initWithCallBack:call]];
-            if(vc){
-                [o displayViewController:vc WithName:name];
-                return true;
-            }else {
-                return false;
-            }
-        }];
+//        __weak id<HMRoute> o = (id<HMRoute>)obj;
+//        [HMOCRunTimeTool classImplamentProtocol:@protocol(HMRoute) selector:@selector(showRoute:withParam:callback:) toClass:obj.class imp:^BOOL (id<HMRoute> s,NSString *name,NSDictionary * param ,handleControllerCallback call) {
+//
+//            UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[HMCallBack.alloc initWithCallBack:call]];
+//            if(vc){
+//                if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive) {
+//
+//                }else{
+//                    HMVCBackUp* b = [[HMVCBackUp alloc] init];
+//                    b.vc = vc;
+//                    b.name = name;
+//                    [self.backup addObject:b];
+//                }
+//                return true;
+//            }else {
+//                return false;
+//            }
+//        }];
     }
     if([obj conformsToProtocol:@protocol(HMManagedController)]){
         [HMOCRunTimeTool assignIVar:@{@"controllerManager":self} ToObject:obj];
@@ -109,6 +114,7 @@
             }
         }];
     }
+    [self.activeViewController addObject:obj];
     return obj;
 }
 + (HMModuleMemoryType)memoryType {
@@ -118,9 +124,18 @@
     while (!self.routers.lastObject.content && self.routers.count > 0) {
         [self.routers removeLastObject];
     }
-    id<HMRouterController> ro = (id<HMRouterController>)self.routers.lastObject.content;
+    id<HMRoute> ro = (id<HMRoute>)self.routers.lastObject.content;
     if(ro){
-        return [ro showRoute:name withParam:param callback:callback];
+        UIViewController* vc = HMGetController(name, param, callback);
+        if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive){
+            [ro displayViewController:vc WithName:name];
+        }else{
+            HMVCBackUp* b = [[HMVCBackUp alloc] init];
+            b.vc = vc;
+            b.name = name;
+            [self.backup addObject:b];
+        }
+        
     }
     return false;
 }
@@ -131,18 +146,37 @@
     UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[[HMCallBack alloc] initWithCallBack:callback]];
     if(!vc)
         return false;
-    UIViewController * pvc = window.rootViewController;
-    while ([pvc presentedViewController]) {
-        pvc = pvc.presentedViewController;
-    }
-    [pvc presentViewController:vc animated:true completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIViewController * pvc = window.rootViewController;
+        while ([pvc presentedViewController]) {
+            pvc = pvc.presentedViewController;
+        }
+        [pvc presentViewController:vc animated:true completion:^{
+        }];
+    });
     return true;
+}
+
+- (void)displayViewController:(nonnull UIViewController *)vc WithName:(nonnull NSString *)name {
+    
+}
+
+- (void)handleApplicationActive{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (HMVCBackUp* v in self.backup) {
+            id<HMRoute> ro = (id<HMRoute>)self.routers.lastObject.content;
+            [ro displayViewController:v.vc WithName:v.name];
+        }
+        [self.backup removeAllObjects];
+    });
 }
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-
+        self.activeViewController = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory capacity:10];
+        self.backup = [NSMutableArray new];
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(handleApplicationActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;
 }
@@ -171,3 +205,8 @@
 
 
 
+@implementation HMVCBackUp
+
+
+
+@end

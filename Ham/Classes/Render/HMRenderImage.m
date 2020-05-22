@@ -9,9 +9,12 @@
 #import "HMRenderImage.h"
 #import "HMDrawImage.h"
 #import <Metal/Metal.h>
+@interface HMRenderImage()
+@property (nonatomic,assign) NSInteger retainNumber;
+@end
 @implementation HMRenderImage{
     
-    renderBlock _render;
+    NSMutableArray<renderBlock> * _render;
     
     dispatch_queue_t _queue;
 }
@@ -20,9 +23,13 @@
     self = [super init];
     if(self) {
         _contextSize = size;
-        _cgContext = createContext(self.contextSize, UIScreen.mainScreen.scale, nil);
-        dispatch_queue_attr_t aa =  dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qos_class_main(), 0);
-        _queue = dispatch_queue_create("HMRenderImage", aa);
+        _render = [NSMutableArray new];
+        _ciContext = [CIContext contextWithOptions:@{
+            kCIContextPriorityRequestLow:@1,
+            kCIContextUseSoftwareRenderer:@1
+        }];
+        dispatch_queue_attr_t aa =  dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0);
+        _queue = dispatch_queue_create("", aa);
     }
     return self;
 }
@@ -31,15 +38,15 @@
     return [self initWithContextSize:UIScreen.mainScreen.bounds.size];
 }
 - (instancetype)draw:(renderBlock)callback{
-    _render = [callback copy];
+    [_render addObject:[callback copy]];
     return self;
 }
-- (NSString *)drawSize:(CGSize)size callback:(getImageBlock)call {
-    NSString *uuid = NSUUID.UUID.UUIDString;
-    dispatch_block_t t = ^{
+- (void)drawSize:(CGSize)size callback:(getImageBlock)call {
+    [self doRetain];
+    dispatch_async(_queue, ^{
         CGContextFlush(self.cgContext);
         CGRect rect = CGRectMake(0, 0, size.width, size.height);
-        self->_render(self.cgContext,rect);
+        self->_render.firstObject(self.cgContext,rect);
         CGFloat delta = self.contextSize.height * UIScreen.mainScreen.scale - rect.size.height * UIScreen.mainScreen.scale;
         CGRect exend = CGRectMake(rect.origin.x * UIScreen.mainScreen.scale,
                                   rect.origin.y * UIScreen.mainScreen.scale + delta,
@@ -53,12 +60,9 @@
         CGImageRelease(cimg);
         CGImageRelease(png);
         call(uimg);
-    };
-    
-    t =  dispatch_block_create(DISPATCH_BLOCK_DETACHED, t);
-    dispatch_async(_queue, t);
-    
-    return uuid;
+        [self->_render removeObjectAtIndex:0];
+        [self doRelease];
+    });
 }
 - (CIImage *)ciImage{
     return CGBitmapContextGetCIImage(_cgContext);
@@ -70,6 +74,18 @@
         render = [HMRenderImage new];
     });
     return render;
+}
+- (void)doRetain{
+    self.retainNumber += 1;
+    if(self.retainNumber > 0){
+        _cgContext = createContext(self.contextSize, UIScreen.mainScreen.scale, nil);
+    }
+}
+- (void)doRelease{
+    self.retainNumber -= 1;
+    if(self.retainNumber <= 0){
+        CGContextRelease(_cgContext);
+    }
 }
 
 @end

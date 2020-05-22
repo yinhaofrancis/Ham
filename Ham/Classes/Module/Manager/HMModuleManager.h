@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable id)getInstanceByName:(NSString *)name;
 
+- (nullable id)getInstanceByName:(NSString *)name withParam:(nullable NSDictionary*)param;
+
 - (nullable id)getInstanceByProtocol:(Protocol *)proto;
 
 - (void)cleanInstanceByName:(NSString *)name;

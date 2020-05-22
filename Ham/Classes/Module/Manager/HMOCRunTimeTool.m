@@ -114,24 +114,6 @@
     }
     return [names copy];
 }
-#pragma clang diagnostic ignored  "-Warc-performSelector-leaks"
-+ (BOOL)addPropertyDidSet:(NSString*)name
-             instantClass:(Class)cls
-              didSetBlock:(didSetBlock)block {
-    SEL setSEL = NSSelectorFromString([NSString stringWithFormat:@"set%@:",name.firstCapitalizedString]);
-    SEL didSetSEL = NSSelectorFromString([NSString stringWithFormat:@"??didSet%@:",name.firstCapitalizedString]);
-    BOOL addResult = [self addSameMethod:didSetSEL encodeSel:setSEL toClass:cls imp:^(id wself,void * v){
-        if([wself respondsToSelector:didSetSEL]){
-            [wself performSelector:didSetSEL withObject:(__bridge id)v];
-        }
-        block(wself,v);
-    }];
-    if(!addResult){
-        return false;
-    }
-    [self swizzing:setSEL with:didSetSEL cls:cls];
-    return true;
-}
 + (BOOL)addMethodToClass:(Class)cls
                 selector:(SEL)selector
                 withType:(const char *)type

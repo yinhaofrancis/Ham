@@ -56,7 +56,10 @@ static HMModuleManager *instance;
 - (void)regModuleWithProtocol:(Protocol *)proto implement:(Class)cls {
     [self regModuleWithName:NSStringFromProtocol(proto) implement:cls];
 }
-- (id)getInstanceByName:(NSString *)name{
+- (id)getInstanceByName:(NSString *)name {
+    return [self getInstanceByName:name withParam:nil];
+}
+- (id)getInstanceByName:(NSString *)name withParam:(NSDictionary *)param{
     if(name.length == 0){
         return nil;
     }
@@ -69,7 +72,12 @@ static HMModuleManager *instance;
         return inst;
     }else{
         if(cls != nil){
-            inst = [[cls alloc] init];
+            if(param != nil){
+                inst = [[cls alloc] initWithParam:param];
+            }else{
+               inst = [[cls alloc] init];
+            }
+            
             if([cls conformsToProtocol:@protocol(HMModuleThreadConfigure)]){
                 if([cls respondsToSelector:@selector(globalQos)]){
                     dispatch_queue_t q = dispatch_get_global_queue([cls globalQos], 0);

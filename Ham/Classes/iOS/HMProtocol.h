@@ -53,7 +53,14 @@ BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindo
 - (UIViewController *)dequeueViewController:(NSString *)name param:(nullable NSDictionary *)param context:(nullable id)ctx;
 
 - (UIViewController *)dequeueViewController:(NSString *)name param:(nullable NSDictionary *)param handle:(nullable handleControllerCallback)callback;
+- (BOOL)showRoute:(NSString *)name
+        withParam:(nullable NSDictionary *)param
+         callback:(nullable handleControllerCallback)callback;
 
+- (BOOL)showRoutePresent:(NSString *)name
+               withParam:(nullable NSDictionary *)param
+                inWindow:(UIWindow *)window
+                callback:(nullable handleControllerCallback)callback;
 @end
 
 
@@ -89,22 +96,8 @@ BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindo
 
 @end
 
-@protocol HMRouterController <NSObject>
 
-@optional
-
-- (BOOL)showRoute:(NSString *)name
-        withParam:(nullable NSDictionary *)param
-         callback:(nullable handleControllerCallback)callback;
-
-- (BOOL)showRoutePresent:(NSString *)name
-               withParam:(nullable NSDictionary *)param
-                inWindow:(UIWindow *)window
-                callback:(nullable handleControllerCallback)callback;
-
-@end
-
-@protocol HMRoute <HMRouterController>
+@protocol HMRoute <NSObject>
 
 - (void) displayViewController:(UIViewController *)vc WithName:(NSString *)name;
 
