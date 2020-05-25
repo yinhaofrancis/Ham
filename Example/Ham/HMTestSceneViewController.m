@@ -15,6 +15,7 @@
 #import <Security/Security.h>
 #import "HMRenderImage.h"
 #import "HMRSA.h"
+#import <MetalPerformanceShaders/MetalPerformanceShaders.h>
 @interface HMTestSceneViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgs;
@@ -27,7 +28,7 @@
 @implementation HMTestSceneViewController
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+    [super viewDidLoad];  
 }
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];

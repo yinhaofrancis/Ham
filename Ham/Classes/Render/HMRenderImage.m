@@ -64,10 +64,6 @@
         [self doRelease];
     });
 }
-
-- (CGImageRef)createPNGImage:(CIImage *)img size:(CGRect)exend{
-    return CGBitMapExportPNG([self.ciContext createCGImage:img fromRect:exend],1);
-}
 - (CIImage *)ciImage{
     return CGBitmapContextGetCIImage(_cgContext);
 }
