@@ -28,6 +28,10 @@
 class cls; \
 char const * HM##name##_mod HMDATA(HMSectModuleName) =  "{ \""#name"\" : \""#cls"\"}";
 
+#define HMKeyModule(index,name,cls) \
+class cls; \
+char const * HM##index##_mod_##cls##ddd HMDATA(HMSectModuleName) =  "{ \"" name"\" : \""#cls"\"}";
+
 #define HMClass(cls) \
 HMModule(cls,cls)
 
