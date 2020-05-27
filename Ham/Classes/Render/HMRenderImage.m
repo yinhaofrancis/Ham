@@ -45,6 +45,7 @@
     [self doRetain];
     dispatch_async(_queue, ^{
         CGContextFlush(self.cgContext);
+        CGContextClearRect(self.cgContext, CGRectMake(0, 0, self.contextSize.width, self.contextSize.height));
         CGRect rect = CGRectMake(0, 0, size.width, size.height);
         self->_render.firstObject(self.cgContext,rect);
         CGFloat delta = self.contextSize.height * UIScreen.mainScreen.scale - rect.size.height * UIScreen.mainScreen.scale;
@@ -56,6 +57,7 @@
         
         CGImageRef img = CGImageCreateWithImageInRect(cimg, exend);
         CGImageRef png = CGBitMapExportPNG(img,1);
+        
         UIImage * uimg =[[UIImage alloc] initWithCGImage:png scale:UIScreen.mainScreen.scale orientation:UIImageOrientationUp];
         CGImageRelease(cimg);
         CGImageRelease(png);
