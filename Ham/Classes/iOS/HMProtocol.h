@@ -48,6 +48,8 @@ BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleControll
 
 BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindow * window,handleControllerCallback _Nullable callback);
 
+BOOL HMShowRoutePresentMainWindow(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
+
 @protocol HMControllerManager <NSObject>
 
 - (UIViewController *)dequeueViewController:(NSString *)name param:(nullable NSDictionary *)param context:(nullable id)ctx;

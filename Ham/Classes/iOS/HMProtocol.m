@@ -24,3 +24,6 @@ inline UIViewController* HMGetControllerWithContext(NSString * name,NSDictionary
 inline BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindow* window ,handleControllerCallback _Nullable callback){
     return [InstantProtocol(HMControllerManager) showRoutePresent:name withParam:param inWindow:window callback:callback];
 }
+inline BOOL HMShowRoutePresentMainWindow(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback) {
+    return [InstantProtocol(HMControllerManager) showRoutePresent:name withParam:param inWindow:UIApplication.sharedApplication.windows.firstObject callback:callback];
+}

@@ -26,14 +26,12 @@
         if(cls == nil){
             if(!self.windowManager){
                 self.windowManager = InstantProtocol(HMWindowManager);
-                self.windowManager.level = 0;
             }
             [self.windowManager showWindow:self withCurrentWindow:nil];
         }
     }else{
         if(!self.windowManager){
             self.windowManager = InstantProtocol(HMWindowManager);
-            self.windowManager.level = 0;
         }
         [self.windowManager showWindow:self withCurrentWindow:nil];
     }

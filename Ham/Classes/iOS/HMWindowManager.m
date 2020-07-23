@@ -34,7 +34,6 @@
     self = [super init];
     if (self) {
         _windowObjects = [[NSMutableArray alloc] init];
-        self.level = 0;
     }
     return self;
 }
@@ -66,7 +65,11 @@
     [self configWindow:self.window withWindowObject:windowObject];
 }
 - (void)configWindow:(UIWindow *)window withWindowObject:(id<HMWindowObject>)windowObject{
-    self.window.windowLevel = self.level;
+    if([windowObject respondsToSelector:@selector(windowLevel)]){
+        self.window.windowLevel = windowObject.windowLevel;
+    }else{
+        self.window.windowLevel = 0;
+    }
     self.window.animation = windowObject;
     if([windowObject respondsToSelector:@selector(showKeyWindow)] && [windowObject showKeyWindow]){
        [self.window makeKeyAndVisible];
@@ -82,10 +85,6 @@
     [self.window visiableSelfComplete:^(BOOL flag) {
       
     }];
-}
-- (void)setLevel:(UIWindowLevel)level{
-    self->level = level;
-    self.window.windowLevel = level;
 }
 - (void)removeWindow{
     [self.window removeSelfComplete:^(BOOL flag) {
@@ -106,7 +105,6 @@
 -(id<HMWindowObject>)firstWindowObject{
     return self.current;
 }
-@synthesize level;
 
 + (HMModuleMemoryType)memoryType {
     return HMModuleNew;

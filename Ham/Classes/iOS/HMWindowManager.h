@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol HMWindowManager<NSObject>
 
 @property (nonatomic, readonly) UIWindow* currentwindow;
-@property (nonatomic, assign) UIWindowLevel level;
 @property(nonatomic,readonly) NSMutableArray<id<HMWindowObject>> *windowObjects;
 + (id<HMWindowManager>)shared;
 
