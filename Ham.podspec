@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Ham'
-  s.version          = '0.2.24'
+  s.version          = '0.2.25'
   s.summary          = 'francis private Module'
 
 # This description is used to generate tags and improve search results.
