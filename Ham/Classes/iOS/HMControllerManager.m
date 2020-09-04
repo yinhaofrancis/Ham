@@ -84,24 +84,6 @@
             self.routers = [NSMutableArray new];
         }
         [self.routers addObject:w];
-//        __weak id<HMRoute> o = (id<HMRoute>)obj;
-//        [HMOCRunTimeTool classImplamentProtocol:@protocol(HMRoute) selector:@selector(showRoute:withParam:callback:) toClass:obj.class imp:^BOOL (id<HMRoute> s,NSString *name,NSDictionary * param ,handleControllerCallback call) {
-//
-//            UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[HMCallBack.alloc initWithCallBack:call]];
-//            if(vc){
-//                if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive) {
-//
-//                }else{
-//                    HMVCBackUp* b = [[HMVCBackUp alloc] init];
-//                    b.vc = vc;
-//                    b.name = name;
-//                    [self.backup addObject:b];
-//                }
-//                return true;
-//            }else {
-//                return false;
-//            }
-//        }];
     }
     if([obj conformsToProtocol:@protocol(HMManagedController)]){
         [HMOCRunTimeTool assignIVar:@{@"controllerManager":self} ToObject:obj];
@@ -124,7 +106,7 @@
     while (!self.routers.lastObject.content && self.routers.count > 0) {
         [self.routers removeLastObject];
     }
-    id<HMRoute> ro = (id<HMRoute>)self.routers.lastObject.content;
+    id<HMRoute> ro = [self currentRouter];
     if(ro){
         UIViewController* vc = HMGetController(name, param, callback);
         if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive){
@@ -138,6 +120,15 @@
         
     }
     return false;
+}
+- (id<HMRoute>)currentRouter{
+    while (!self.routers.lastObject.content) {
+        [self.routers removeLastObject];
+        if(self.routers.count == 0){
+            return nil;
+        }
+    }
+    return (id<HMRoute>)self.routers.lastObject.content;
 }
 - (BOOL)showRoutePresent:(NSString *)name
                withParam:(NSDictionary *)param

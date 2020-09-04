@@ -25,7 +25,8 @@ typedef NS_ENUM(NSUInteger, ProxyMatchType) {
 
 - (instancetype)initWithQueue:(nullable dispatch_queue_t)queue withObject:(id)object;
 
-
 @end
+
+
 
 NS_ASSUME_NONNULL_END

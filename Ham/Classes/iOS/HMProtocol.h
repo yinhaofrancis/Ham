@@ -51,7 +51,11 @@ BOOL HMBackRoute();
 BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindow * window,handleControllerCallback _Nullable callback);
 
 BOOL HMShowRoutePresentMainWindow(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
+@protocol HMRoute <NSObject>
 
+- (void) displayViewController:(UIViewController *)vc WithName:(NSString *)name;
+
+@end
 @protocol HMControllerManager <NSObject>
 
 - (UIViewController *)dequeueViewController:(NSString *)name param:(nullable NSDictionary *)param context:(nullable id)ctx;
@@ -65,6 +69,7 @@ BOOL HMShowRoutePresentMainWindow(NSString * name,NSDictionary  * _Nullable  par
                withParam:(nullable NSDictionary *)param
                 inWindow:(UIWindow *)window
                 callback:(nullable handleControllerCallback)callback;
+@property(nonatomic,readonly) id<HMRoute> currentRouter;
 @end
 
 
@@ -101,11 +106,7 @@ BOOL HMShowRoutePresentMainWindow(NSString * name,NSDictionary  * _Nullable  par
 @end
 
 
-@protocol HMRoute <NSObject>
 
-- (void) displayViewController:(UIViewController *)vc WithName:(NSString *)name;
-
-@end
 
 @protocol HMResourceLoader <NSObject>
 
