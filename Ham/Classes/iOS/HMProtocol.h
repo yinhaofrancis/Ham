@@ -46,7 +46,7 @@ UIViewController* HMGetControllerWithContext(NSString * name,NSDictionary  * _Nu
 
 BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
 
-BOOL HMBackRoute();
+BOOL HMBackRoute(void);
 
 BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindow * window,handleControllerCallback _Nullable callback);
 

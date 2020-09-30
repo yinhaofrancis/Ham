@@ -36,8 +36,13 @@
 - (UIViewController *)dequeueViewControllerInner:(NSString *)name param:(NSDictionary *)param context:(id)ctx{
     NSDictionary* dc = [HMAnotationStorage.shared getEnvConfigByName:@HMSectCtrlKey];
     Class cls = NSClassFromString(dc[name]);
+    
     UIViewController *obj;
     id temp = [cls alloc];
+    if ([temp respondsToSelector:@selector(routeVC)]){
+        obj = [temp routeVC];
+        return obj;
+    }
     if([cls conformsToProtocol:@protocol(HMNameController)]){
         [HMOCRunTimeTool assignIVar:@{@"vcName":name} ToObject:temp];
     }
