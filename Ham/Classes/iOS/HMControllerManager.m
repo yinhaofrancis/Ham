@@ -54,9 +54,12 @@ HMService(HMControllerManager,HMControllerManagerImp)
     return [self dequeueViewController:name param:param context:[[HMCallBack alloc] initWithCallBack:callback]];
 }
 - (UIViewController *)dequeueViewControllerInner:(NSString *)name param:(NSDictionary *)param context:(id)ctx{
-    NSDictionary* dc = [HMAnotationStorage.shared getEnvConfigByName:@HMSectCtrlKey];
-    Class cls = NSClassFromString(dc[name]);
-    
+    RouterTree * dc = [HMAnotationStorage.shared getEnvConfigByName:@HMSectCtrlKey];
+    RouterMatch* match = [dc generateWithRoute:name];
+    Class cls = match.cls;
+    NSMutableDictionary* pathParam = [match.param mutableCopy];
+    [pathParam addEntriesFromDictionary:param];
+    param = pathParam;
     UIViewController *obj;
     id temp = [cls alloc];
     if ([temp respondsToSelector:@selector(routeVC)]){
@@ -109,8 +112,8 @@ HMService(HMControllerManager,HMControllerManagerImp)
         }
     }
     
-    if(obj == nil && dc[name] != nil){
-        obj = [[UIStoryboard storyboardWithName:name bundle:[NSBundle bundleWithIdentifier:dc[name]]] instantiateInitialViewController];
+    if(obj == nil && match.name != nil){
+        obj = [[UIStoryboard storyboardWithName:name bundle:[NSBundle bundleWithIdentifier:match.name]] instantiateInitialViewController];
         if([obj conformsToProtocol:@protocol(HMParamController)]){
             if(param){
                 if([obj respondsToSelector:@selector(handleParam:)]){
@@ -267,9 +270,9 @@ HMService(HMControllerManager,HMControllerManagerImp)
 
 
 - (BOOL)hasRoute:(nonnull NSString *)name {
-    NSDictionary* dc = [HMAnotationStorage.shared getEnvConfigByName:@HMSectCtrlKey];
-    Class cls = NSClassFromString(dc[name]);
-    return cls != nil;
+    RouterTree * dc = [HMAnotationStorage.shared getEnvConfigByName:@HMSectCtrlKey];
+    RouterMatch* m = [dc generateWithRoute:name];;
+    return m != nil;
 }
 
 - (void)handleApplicationActive{

@@ -162,17 +162,21 @@ public enum Dog{
 
 @objcMembers
 public class RouterDefine:NSObject{
-    public var cls:AnyClass
-    public init(cls: AnyClass) {
+    public var cls:AnyClass?
+    public var name:String?
+    public init(cls: AnyClass?,name: String?) {
         self.cls = cls
+        self.name = name
     }
 }
 @objcMembers
 public class RouterMatch:NSObject{
-    public var cls:AnyClass
-    public var param:[String:String]
-    init(cls: AnyClass, param: [String : String]) {
+    public var cls:AnyClass?
+    public var name:String?
+    public var param:[String:String]?
+    init(cls: AnyClass?, name:String?, param: [String : String]?) {
         self.cls = cls
+        self.name = name
         self.param = param
     }
 }
@@ -181,14 +185,20 @@ public class RouterTree:NSObject{
     
     @objc
     public func register(route:String,cls:AnyClass){
-        self.root.add(routes: ArraySlice(route.components(separatedBy: "/")), content: RouterDefine(cls: cls))
+        self.root.add(routes: ArraySlice(route.components(separatedBy: "/")), content: RouterDefine(cls: cls, name: nil))
+    }
+    @objc
+    public func register(route:String,name:String){
+        self.root.add(routes: ArraySlice(route.components(separatedBy: "/")), content: RouterDefine(cls: nil, name: name))
     }
     
     @objc
     public func generate(route:String)->RouterMatch?{
         guard let temp = self.matchClass(route: route) else { return nil }
-        guard let cls = temp.0.value?.cls else { return nil }
-        return RouterMatch(cls:cls, param: temp.1)
+        if temp.0.value?.cls == nil && temp.0.value?.name == nil {
+            return nil
+        }
+        return RouterMatch(cls:temp.0.value?.cls, name: temp.0.value?.name, param: temp.1)
     }
     
     private func matchClass(route:String)->(TreeNodeContent<RouterDefine>,[String:String])?{

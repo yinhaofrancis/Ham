@@ -33,6 +33,8 @@
     Class cls = NSClassFromString(value);
     if(cls){
         [storage[name] registerWithRoute:key cls: cls];
+    }else{
+        [storage[name] registerWithRoute:key name:value];
     }
     
 }

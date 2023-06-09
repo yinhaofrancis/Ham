@@ -6,13 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <Ham/Ham-Swift.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HMAnotationStorage : NSObject
 + (instancetype)shared;
 - (void)addName:(NSString*)name key:(NSString *)key value:(NSString *)value;
-- (NSDictionary *)getEnvConfigByName:(NSString *)name;
+- (RouterTree *)getEnvConfigByName:(NSString *)name;
 @end
 
 @interface HMBlockAnotationStorage : NSObject
