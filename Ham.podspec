@@ -29,7 +29,7 @@ francis private Module with objective-C
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '12.0'
-
+  s.swift_version = "5.0"
   s.default_subspec = 'Module'
   
   s.subspec 'Module' do |c|

@@ -12,10 +12,12 @@
 #import <objc/runtime.h>
 #import "HMProxy.h"
 #import "HMOCRunTimeTool.h"
+#import <Ham/Ham-Swift.h>
 static HMModuleManager *instance;
 
 @implementation HMModuleManager{
-    NSMutableDictionary<NSString *,Class> *regModules;
+//    NSMutableDictionary<NSString *,Class> *regModules;
+    RouterTree * regModules;
     NSMutableDictionary<NSString *,id> *singletons;
     NSMutableDictionary<NSString *,HMWeakContainer*> *weaksingletons;
     dispatch_semaphore_t sem;
@@ -23,7 +25,7 @@ static HMModuleManager *instance;
 - (instancetype)init {
     self = [super init];
     if (self) {
-        regModules = [[NSMutableDictionary alloc] init];
+        regModules = [[RouterTree alloc] init];
         singletons = [[NSMutableDictionary alloc] init];
         weaksingletons = [[NSMutableDictionary alloc] init];
         sem = dispatch_semaphore_create(1);
@@ -48,9 +50,9 @@ static HMModuleManager *instance;
     }
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 #if DEBUG
-    NSAssert(!regModules[name], @"module %@ 已存在",name);
+//    NSAssert(!regModules[name], @"module %@ 已存在",name);
 #endif
-    regModules[name] = cls;
+    [regModules registerWithRoute:name cls:cls];
     dispatch_semaphore_signal(sem);
 }
 - (void)regModuleWithProtocol:(Protocol *)proto implement:(Class)cls {
@@ -63,7 +65,12 @@ static HMModuleManager *instance;
     if(name.length == 0){
         return nil;
     }
-    Class cls = [self getInstanceClassByName:name];
+    
+    RouterMatch * match = [self getInstanceRouterMatchByName:name];
+    
+    NSMutableDictionary* mixParam = [match.param mutableCopy];
+    [mixParam addEntriesFromDictionary:param];
+    Class cls = match.cls;
     id inst = singletons[NSStringFromClass(cls)];
     if(inst == nil){
         inst = weaksingletons[NSStringFromClass(cls)].content;
@@ -203,10 +210,17 @@ static HMModuleManager *instance;
     return singletons.allValues;
 }
 - (Class)getInstanceClassByName:(NSString *)name{
-    return regModules[name];
+    return [self getInstanceRouterMatchByName:name].cls;
 }
 - (Class)getInstanceClassByProtocol:(Protocol *)proto{
-    return [self getInstanceClassByName:NSStringFromProtocol(proto)];
+    return [self getInstanceRouterMatchByProtocol:proto].cls;
+}
+
+- (RouterMatch *)getInstanceRouterMatchByName:(NSString *)name{
+    return [regModules generateWithRoute:name];
+}
+- (RouterMatch *)getInstanceRouterMatchByProtocol:(Protocol *)proto{
+    return [regModules generateWithRoute:NSStringFromProtocol(proto)];
 }
 
 //MARK:callback

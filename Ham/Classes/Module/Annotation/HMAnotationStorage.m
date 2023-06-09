@@ -6,8 +6,10 @@
 //
 
 #import "HMAnotationStorage.h"
+#import <Ham/Ham-Swift.h>
+
 @implementation HMAnotationStorage{
-    NSMutableDictionary<NSString *,NSMutableDictionary<NSString *,NSString *> *> * storage;
+    NSMutableDictionary<NSString *,RouterTree *> * storage;
 }
 +(instancetype)shared{
     static HMAnotationStorage* storage;
@@ -26,12 +28,16 @@
 }
 - (void)addName:(NSString *)name key:(NSString *)key value:(NSString *)value{
     if(!storage[name]){
-        storage[name] = [[NSMutableDictionary alloc] init];
+        storage[name] = [[RouterTree alloc] init];
     }
-    storage[name][key] = value;
+    Class cls = NSClassFromString(value);
+    if(cls){
+        [storage[name] registerWithRoute:key cls: cls];
+    }
+    
 }
-- (NSDictionary *)getEnvConfigByName:(NSString *)name{
-    return [storage[name] copy];
+- (RouterTree *)getEnvConfigByName:(NSString *)name{
+    return storage[name];
 }
 @end
 
