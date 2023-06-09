@@ -11,22 +11,18 @@
 #define HMSectCtrlKey "HMSectCtrl"
 
 #define HMController(router,controller) \
-class controller; \
-@HMCustomAnnotation(HMSectCtrl,router,controller)
+@class controller; \
+HMCustomAnnotation(HMSectCtrl,router,controller)
 
-
-#define HMController(router,controller) \
-class controller; \
-@HMCustomAnnotation(HMSectCtrl,router,controller)
 
 #define HMKeyController(router,controller) \
-class controller; \
+@class controller; \
 char const * HMConr_##controller##_contr_Annotation HMDATA(HMSectCustom) =  "{\"HMSectCtrl\":{ \"" router"\" :\""#controller"\"}}";
 
 
 
 #define HMNextKeyController(key,router,controller) \
-class controller; \
+@class controller; \
 char const * HMConr_##controller##_contr##key##_Annotation HMDATA(HMSectCustom) =  "{\"HMSectCtrl\":{ \"" router"\" :\""#controller"\"}}";
 
 #define HMNibController(router,bundleId) \
@@ -46,14 +42,32 @@ UIViewController* HMGetControllerWithContext(NSString * name,NSDictionary  * _Nu
 
 BOOL HMShowRoute(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
 
-BOOL HMBackRoute(void);
+BOOL HMShowRouteNoAnimation(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
+
+BOOL HMReplaceRoute(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
+
+BOOL HMReplaceCurrentRoute(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
+BOOL HMResetRoute(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
+void HMBackRoute(void);
 
 BOOL HMShowRoutePresent(NSString * name,NSDictionary  * _Nullable  param,UIWindow * window,handleControllerCallback _Nullable callback);
+BOOL HMShowRoutePresentNoAnimation(NSString * name,NSDictionary  * _Nullable  param,UIWindow* window ,handleControllerCallback _Nullable callback);
 
 BOOL HMShowRoutePresentMainWindow(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
+BOOL HMShowRoutePresentMainWindowNoAnimation(NSString * name,NSDictionary  * _Nullable  param,handleControllerCallback _Nullable callback);
 @protocol HMRoute <NSObject>
 
-- (void) displayViewController:(UIViewController *)vc WithName:(NSString *)name;
+- (void) displayViewController:(UIViewController *)vc WithName:(NSString *)name animation:(BOOL)animation;
+
+- (void) replaceViewController:(UIViewController *)vc WithName:(NSString *)name animation:(BOOL)animation;
+
+- (void) replaceCurrentViewController:(UIViewController *)vc WithName:(NSString *)name animation:(BOOL)animation;
+
+- (void)resetViewController:(UIViewController *)vc WithName:(NSString *)name animation:(BOOL)animation;
+
+- (void)backViewController;
+
+- (NSInteger)priority;
 
 @end
 @protocol HMControllerManager <NSObject>
@@ -63,13 +77,36 @@ BOOL HMShowRoutePresentMainWindow(NSString * name,NSDictionary  * _Nullable  par
 - (UIViewController *)dequeueViewController:(NSString *)name param:(nullable NSDictionary *)param handle:(nullable handleControllerCallback)callback;
 - (BOOL)showRoute:(NSString *)name
         withParam:(nullable NSDictionary *)param
+        animation:(BOOL)animation
+         callback:(nullable handleControllerCallback)callback;
+
+- (BOOL)resetRoute:(NSString *)name
+        withParam:(nullable NSDictionary *)param
+        animation:(BOOL)animation
+         callback:(nullable handleControllerCallback)callback;
+- (BOOL)replaceRoute:(NSString *)name
+        withParam:(nullable NSDictionary *)param
+           animation:(BOOL)animation
+         callback:(nullable handleControllerCallback)callback;
+
+- (BOOL)replaceCurrentRoute:(NSString *)name
+        withParam:(nullable NSDictionary *)param
+           animation:(BOOL)animation
          callback:(nullable handleControllerCallback)callback;
 
 - (BOOL)showRoutePresent:(NSString *)name
                withParam:(nullable NSDictionary *)param
                 inWindow:(UIWindow *)window
                 callback:(nullable handleControllerCallback)callback;
+- (BOOL)showRoutePresent:(NSString *)name
+               withParam:(nullable NSDictionary *)param
+                inWindow:(UIWindow *)window
+               animation:(BOOL)animation
+                callback:(nullable handleControllerCallback)callback;
+- (void)backRoute;
+- (BOOL)hasRoute:(NSString *)name;
 @property(nonatomic,readonly) id<HMRoute> currentRouter;
+@property(nonatomic,assign) BOOL lock;
 @end
 
 
@@ -98,6 +135,8 @@ BOOL HMShowRoutePresentMainWindow(NSString * name,NSDictionary  * _Nullable  par
 @optional
 - (instancetype)initWithParam:(nullable NSDictionary *)param;
 - (void)handleParam:(NSDictionary *)param;
+- (BOOL)canOpenViewController;
+- (UIViewController *)deferViewController;
 @end
 
 @protocol HMNameController <NSObject>

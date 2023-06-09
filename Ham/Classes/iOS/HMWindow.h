@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)showKeyWindow;
 - (BOOL)userInteractionEnabled;
 - (CGFloat)windowLevel;
+- (CGRect)windowFrame;
 @end
 
 @interface HMWindow : UIWindow

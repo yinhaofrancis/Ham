@@ -34,12 +34,24 @@
 
 - (void)addJSObject:(HMJSObject *)object{
     jso[object.functionName] = object;
-    [_configure.userContentController removeScriptMessageHandlerForName:object.functionName];
-    [_configure.userContentController addScriptMessageHandler:object name:object.functionName];
+    
+    if (@available(iOS 14.0, *)) {
+        [_configure.userContentController removeScriptMessageHandlerForName:object.functionName contentWorld:WKContentWorld.pageWorld];
+        [_configure.userContentController addScriptMessageHandlerWithReply:object contentWorld:WKContentWorld.pageWorld name:object.functionName];
+    } else {
+        [_configure.userContentController removeScriptMessageHandlerForName:object.functionName];
+        [_configure.userContentController addScriptMessageHandler:object name:object.functionName];
+    }
+    
 }
 - (void)removeJSObject:(HMJSObject *)object{
     [jso removeObjectForKey:object.functionName];
-    [_configure.userContentController removeScriptMessageHandlerForName:object.functionName];
+    if (@available(iOS 14.0, *)) {
+        [_configure.userContentController removeScriptMessageHandlerForName:object.functionName contentWorld:WKContentWorld.pageWorld];
+    } else {
+        [_configure.userContentController removeScriptMessageHandlerForName:object.functionName];
+    }
+    
 }
 - (void)injectJSCode:(WKUserScript *)jsCode{
     [_configure.userContentController addUserScript:jsCode];

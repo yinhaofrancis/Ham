@@ -18,7 +18,7 @@
 
 
 
-@HMService(HMWindowManager, HMWindowManagerImp)
+HMService(HMWindowManager, HMWindowManagerImp)
 
 @implementation HMWindowManagerImp
 
@@ -39,7 +39,7 @@
 }
 
 - (void)showWindow:(id<HMWindowObject>)windowObject withCurrentWindow:(nullable UIWindow *)currentWindow{
-    if(self.window){
+    if(self.window.rootViewController != nil){
         [self.windowObjects addObject:windowObject];
     }else{
         if (@available(iOS 13.0, *)) {
@@ -82,20 +82,27 @@
     [self.window setOpaque:false];
     self.window.backgroundColor = UIColor.clearColor;
     self.window.rootViewController = windowObject.rootVC;
+    if([windowObject respondsToSelector:@selector(windowFrame)]){
+        self.window.frame = [windowObject windowFrame];
+    }else{
+        self.window.frame = UIScreen.mainScreen.bounds;
+    }
     [self.window visiableSelfComplete:^(BOOL flag) {
       
     }];
 }
 - (void)removeWindow{
+    
+    __weak HMWindowManagerImp *ws = self;
     [self.window removeSelfComplete:^(BOOL flag) {
-        UIWindow* w = self.window;
-        self.window = nil;
-        id<HMWindowObject> object = self.windowObjects.firstObject;
+        UIWindow* w = ws.window;
+        ws.window = nil;
+        id<HMWindowObject> object = ws.windowObjects.firstObject;
         if (object){
-            [self showWindow:object withCurrentWindow:w];
-            [self.windowObjects removeObject:object];
+            [ws showWindow:object withCurrentWindow:w];
+            [ws.windowObjects removeObject:object];
         }else{
-            self.current = nil;
+            ws.current = nil;
         }
     }];
 }

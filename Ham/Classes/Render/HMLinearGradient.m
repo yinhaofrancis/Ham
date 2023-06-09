@@ -29,7 +29,7 @@
     
     __weak HMLinearGradient* wself = self;
     self.draw = [[HMDrawImage alloc] initWithSize:self->canvasSize ForCallback:^(CGContextRef  _Nonnull ctx,HMDrawImage* draw) {
-        CGFloat* colorLocations = [self cglocations];
+        CGFloat* colorLocations = [wself cglocations];
         CGFloat * colors = [wself cgcolors];
         CGColorSpaceRef csp = CGColorSpaceCreateDeviceRGB();
         CGGradientRef gradient = CGGradientCreateWithColorComponents(csp, colors, colorLocations, wself.colors.count);

@@ -16,7 +16,7 @@
 #import "HMAnnotation.h"
 #import "HMModuleManager.h"
 #import "HMAnotationStorage.h"
-#import "HMEnv.h"
+
 @implementation HMAnnotation
 
 @end

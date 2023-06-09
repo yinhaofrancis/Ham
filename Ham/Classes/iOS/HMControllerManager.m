@@ -12,23 +12,43 @@
 #import <objc/runtime.h>
 #import "HMOCRunTimeTool.h"
 //static NSMutableDictionary *dc;
-@HMService(HMControllerManager,HMControllerManagerImp)
+static BOOL debounce = false;
+
+
+HMService(HMControllerManager,HMControllerManagerImp)
 @implementation HMControllerManagerImp
+@synthesize lock;
 - (UIViewController *)dequeueViewController:(NSString *)name param:(NSDictionary *)param context:(nullable id)ctx{
-    UIViewController * vc = [self dequeueViewControllerInner:name param:param context:ctx];
-    if(vc == nil){
-        UIViewController * vc = [[UIViewController alloc] init];
-        UILabel* lb = [[UILabel alloc] init];
-        lb.text = @"正在装修";
-        lb.textAlignment = NSTextAlignmentCenter;
-        lb.backgroundColor = UIColor.whiteColor;
-        lb.frame = vc.view.bounds;
-        lb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
-        [vc.view addSubview:lb];
+
+    
+    @try {
+        UIViewController * vc = [self dequeueViewControllerInner:name param:param context:ctx];
+        if(vc == nil){
+            NSMutableDictionary* errorParam = param.mutableCopy;
+            errorParam[@"_route"] = name;
+            vc = [self dequeueViewControllerInner:@"/app/error" param:param context:ctx];
+        }
+#if DEBUG
+        if(vc == nil){
+            UIViewController * vc = [[UIViewController alloc] init];
+            UILabel* lb = [[UILabel alloc] init];
+            lb.text = @"正在装修";
+            lb.textAlignment = NSTextAlignmentCenter;
+            lb.backgroundColor = UIColor.whiteColor;
+            lb.frame = vc.view.bounds;
+            lb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+            [vc.view addSubview:lb];
+            return vc;
+        }
+#endif
         return vc;
+    } @catch (NSException *exception) {
+        return nil;
+    } @finally {
+
     }
-    return vc;
+    return nil;
 }
 - (UIViewController *)dequeueViewController:(NSString *)name param:(NSDictionary *)param handle:(handleControllerCallback)callback{
     return [self dequeueViewController:name param:param context:[[HMCallBack alloc] initWithCallBack:callback]];
@@ -46,24 +66,49 @@
     if([cls conformsToProtocol:@protocol(HMNameController)]){
         [HMOCRunTimeTool assignIVar:@{@"vcName":name} ToObject:temp];
     }
+    if(temp){
+        [HMModuleManager.shared assignAllModule:temp];
+    }
     if([cls conformsToProtocol:@protocol(HMParamController)]){
-        
-        if(param && [temp respondsToSelector:@selector(initWithParam:)]){
+        if ([temp respondsToSelector:@selector(canOpenViewController)]){
+            if([temp canOpenViewController]){
+                if(param && [temp respondsToSelector:@selector(initWithParam:)]){
+                    obj = [temp initWithParam:param];
+                }else{
+                    if(param){
+                        [HMOCRunTimeTool assignIVar:@{@"param":param} ToObject:temp];
+                        
+                    }
+                    obj = [temp init];
+                }
+            }else{
+                if ([temp respondsToSelector:@selector(deferViewController)]){
+                    
+                    UIViewController* vc = [temp deferViewController];
+                    if(vc == nil){
+                        @throw [NSException exceptionWithName:@"VC" reason:@"NOVC" userInfo:nil];
+                    }
+                }
+            }
+        }else{
+            if(param && [temp respondsToSelector:@selector(initWithParam:)]){
+                obj = [temp initWithParam:param];
+            }else{
+                if(param){
+                    [HMOCRunTimeTool assignIVar:@{@"param":param} ToObject:temp];
+                    
+                }
+                obj = [temp init];
+            }
+        }
+    }else{
+        if([temp respondsToSelector:@selector(initWithParam:)]){
             obj = [temp initWithParam:param];
         }else{
-            if(param){
-                [HMOCRunTimeTool assignIVar:@{@"param":param} ToObject:temp];
-                
-            }
             obj = [temp init];
         }
-        
-    }else{
-        obj = [cls new];
     }
-    if(obj){
-        [HMModuleManager.shared assignAllModule:obj];
-    }
+    
     if(obj == nil && dc[name] != nil){
         obj = [[UIStoryboard storyboardWithName:name bundle:[NSBundle bundleWithIdentifier:dc[name]]] instantiateInitialViewController];
         if([obj conformsToProtocol:@protocol(HMParamController)]){
@@ -107,7 +152,48 @@
 + (HMModuleMemoryType)memoryType {
     return HMModuleSinglten;
 }
-- (BOOL)showRoute:(NSString *)name withParam:(NSDictionary *)param callback:(handleControllerCallback)callback{
+- (BOOL)resetRoute:(NSString *)name withParam:(NSDictionary *)param animation:(BOOL)animation callback:(handleControllerCallback)callback{
+    id<HMRoute> ro = [self currentRouter];
+    if(ro){
+        UIViewController* vc = HMGetController(name, param, callback);
+        [ro resetViewController:vc WithName:name animation:animation];
+        return true;
+    }
+    return false;
+}
+- (BOOL)replaceRoute:(NSString *)name withParam:(NSDictionary *)param animation:(BOOL)animation callback:(handleControllerCallback)callback {
+    while (!self.routers.lastObject.content && self.routers.count > 0) {
+        [self.routers removeLastObject];
+    }
+    id<HMRoute> ro = [self currentRouter];
+    if(ro){
+        UIViewController* vc = HMGetController(name, param, callback);
+        [ro replaceViewController:vc WithName:name animation:animation];
+        return true;
+    }
+    return false;
+}
+- (BOOL)replaceCurrentRoute:(NSString *)name withParam:(NSDictionary *)param animation:(BOOL)animation callback:(handleControllerCallback)callback{
+    while (!self.routers.lastObject.content && self.routers.count > 0) {
+        [self.routers removeLastObject];
+    }
+    id<HMRoute> ro = [self currentRouter];
+    if(ro){
+        UIViewController* vc = HMGetController(name, param, callback);
+    
+        [ro replaceCurrentViewController:vc WithName:name animation:animation];
+        return true;
+    }
+    return false;
+}
+- (BOOL)showRoute:(NSString *)name withParam:(NSDictionary *)param animation:(BOOL)animation callback:(handleControllerCallback)callback{
+    if(debounce){
+        return false;
+    }
+    debounce = true;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        debounce = false;
+    });
     while (!self.routers.lastObject.content && self.routers.count > 0) {
         [self.routers removeLastObject];
     }
@@ -115,53 +201,82 @@
     if(ro){
         UIViewController* vc = HMGetController(name, param, callback);
         if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive){
-            [ro displayViewController:vc WithName:name];
+            [ro displayViewController:vc WithName:name animation:animation];
         }else{
             HMVCBackUp* b = [[HMVCBackUp alloc] init];
             b.vc = vc;
             b.name = name;
             [self.backup addObject:b];
         }
-        
+        return true;
     }
     return false;
 }
 - (id<HMRoute>)currentRouter{
-    while (!self.routers.lastObject.content) {
-        [self.routers removeLastObject];
-        if(self.routers.count == 0){
-            return nil;
+    id<HMRoute> route;
+    for (HMWeakContainer * r in self.routers) {
+        if(r.content){
+            if(route == nil){
+                route = r.content;
+            }else{
+                id<HMRoute> cr = r.content;
+                if([cr priority] > route.priority){
+                    route = cr;
+                }
+            }
         }
+        
     }
-    return (id<HMRoute>)self.routers.lastObject.content;
+    return route;
 }
 - (BOOL)showRoutePresent:(NSString *)name
                withParam:(NSDictionary *)param
                 inWindow:(nonnull UIWindow *)window
                 callback:(handleControllerCallback)callback{
-    UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[[HMCallBack alloc] initWithCallBack:callback]];
-    if(!vc)
+    return [self showRoutePresent:name withParam:param inWindow:window animation:true callback:callback];
+}
+- (BOOL)showRoutePresent:(NSString *)name
+               withParam:(nullable NSDictionary *)param
+                inWindow:(UIWindow *)window
+               animation:(BOOL)animation
+                callback:(nullable handleControllerCallback)callback {
+    @try {
+        UIViewController * vc = [self dequeueViewControllerInner:name param:param context:[[HMCallBack alloc] initWithCallBack:callback]];
+        if(!vc)
+            return false;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIViewController * pvc = window.rootViewController;
+            while ([pvc presentedViewController]) {
+                pvc = pvc.presentedViewController;
+            }
+            [pvc presentViewController:vc animated:animation completion:^{
+            }];
+        });
+        return true;
+    } @catch (NSException *exception) {
         return false;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        UIViewController * pvc = window.rootViewController;
-        while ([pvc presentedViewController]) {
-            pvc = pvc.presentedViewController;
-        }
-        [pvc presentViewController:vc animated:true completion:^{
-        }];
-    });
-    return true;
+    } @finally {
+        
+    }
+    
 }
 
-- (void)displayViewController:(nonnull UIViewController *)vc WithName:(nonnull NSString *)name {
-    
+- (void)backRoute {
+    [self.currentRouter backViewController];
+}
+
+
+- (BOOL)hasRoute:(nonnull NSString *)name {
+    NSDictionary* dc = [HMAnotationStorage.shared getEnvConfigByName:@HMSectCtrlKey];
+    Class cls = NSClassFromString(dc[name]);
+    return cls != nil;
 }
 
 - (void)handleApplicationActive{
     dispatch_async(dispatch_get_main_queue(), ^{
         for (HMVCBackUp* v in self.backup) {
-            id<HMRoute> ro = (id<HMRoute>)self.routers.lastObject.content;
-            [ro displayViewController:v.vc WithName:v.name];
+            id<HMRoute> ro = (id<HMRoute>)[self currentRouter];
+            [ro displayViewController:v.vc WithName:v.name animation:true];
         }
         [self.backup removeAllObjects];
     });
@@ -176,6 +291,7 @@
     }
     return self;
 }
+
 @end
 
 

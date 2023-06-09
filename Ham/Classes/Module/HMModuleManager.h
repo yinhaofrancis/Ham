@@ -10,14 +10,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// 模块管理器
 @interface HMModuleManager : NSObject
 
 +(instancetype)shared;
 
+/// 注册一个模块
+/// - Parameters:
+///   - name: 模块名
+///   - cls: 模块入口类
 - (void)regModuleWithName:(NSString *)name implement:(Class)cls;
 
+//// 注册一个模块
+/// - Parameters:
+///   - proto: 协议
+///   - cls: 模块入口类
 - (void)regModuleWithProtocol:(Protocol *)proto implement:(Class)cls;
 
+/// 获取对象
+/// - Parameter name: 对象名
 - (nullable id)getInstanceByName:(NSString *)name;
 
 - (nullable id)getInstanceByName:(NSString *)name withParam:(nullable NSDictionary*)param;

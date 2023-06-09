@@ -22,6 +22,15 @@
         [self.animation hideAnimation:self complete:handle];
     }else{
         handle(true);
+        self.hidden = true;
     }
+}
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    CGPoint p = [self convertPoint:point toView:self.rootViewController.view];
+    return [self.rootViewController.view pointInside:p withEvent:event];
+}
+- (void)dealloc
+{
+    
 }
 @end

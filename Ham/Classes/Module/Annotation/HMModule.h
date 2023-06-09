@@ -16,21 +16,14 @@ typedef NS_ENUM(NSUInteger, HMModuleMemoryType) {
 };
 @protocol HMModule <NSObject>
 + (HMModuleMemoryType) memoryType;
+
 @optional
 +(BOOL) isAsync;
+@property (nonatomic,copy) NSString *name;
 - (instancetype)initWithParam:(NSDictionary *)param;
 @end
 
-@protocol HMModuleThreadConfigure <NSObject>
 
-@optional
-+ (const char *) qosName;
-
-+ (dispatch_queue_attr_t) queueAttribute;
-
-+ (qos_class_t) globalQos;
-
-@end
 
 //typedef void(^HMCallBackModuleCallback)( NSDictionary* _Nullable param,id _Nullable sender);
 //

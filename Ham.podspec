@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Ham'
-  s.version          = '0.2.25'
+  s.version          = '0.2.28'
   s.summary          = 'francis private Module'
 
 # This description is used to generate tags and improve search results.
@@ -21,14 +21,14 @@ Pod::Spec.new do |s|
 francis private Module with objective-C
                        DESC
 
-  s.homepage         = 'https://github.com/yinhaofrancis/Ham'
+  s.homepage         = 'https://codeup.aliyun.com/5eplay/5eplay/app/Ham'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'yinhaofrancis' => '1833918721@qq.com' }
-  s.source           = { :git => 'https://github.com/yinhaofrancis/Ham.git', :tag => s.version.to_s }
+  s.source           = { :git => 'git@codeup.aliyun.com:5eplay/5eplay/app/Ham.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '12.0'
 
   s.default_subspec = 'Module'
   

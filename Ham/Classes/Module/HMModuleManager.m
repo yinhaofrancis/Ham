@@ -73,36 +73,26 @@ static HMModuleManager *instance;
     }else{
         if(cls != nil){
             if(param != nil){
-                inst = [[cls alloc] initWithParam:param];
+                
+                inst = [cls alloc];
+                if ([inst respondsToSelector:@selector(setName:)]){
+                    [inst setName:name];
+                }
+                inst = [inst initWithParam:param];
             }else{
-               inst = [[cls alloc] init];
+                inst = [cls alloc];
+                if ([inst respondsToSelector:@selector(setName:)]){
+                    [inst setName:name];
+                }
+                inst = [inst init];
             }
             
-            if([cls conformsToProtocol:@protocol(HMModuleThreadConfigure)]){
-                if([cls respondsToSelector:@selector(globalQos)]){
-                    dispatch_queue_t q = dispatch_get_global_queue([cls globalQos], 0);
-                    inst = [[HMProxy alloc] initWithQueue:q withObject:inst];
-                }else{
-                    const char* name = "";
-                    dispatch_queue_attr_t att = DISPATCH_QUEUE_SERIAL;
-                    if([cls respondsToSelector:@selector(qosName)]){
-                        name = [cls qosName];
-                    }
-                    if([cls respondsToSelector:@selector(queueAttribute)]){
-                        att = [cls queueAttribute];
-                    }
-                    dispatch_queue_t q = dispatch_queue_create(name, att);
+            if ([cls respondsToSelector:@selector(isAsync)]){
+                if([cls isAsync]){
+                    dispatch_queue_t q = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL);
                     inst = [[HMProxy alloc] initWithQueue:q withObject:inst];
                 }
-               
-           }else{
-               if ([cls respondsToSelector:@selector(isAsync)]){
-                   if([cls isAsync]){
-                       dispatch_queue_t q = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL);
-                       inst = [[HMProxy alloc] initWithQueue:q withObject:inst];
-                   }
-               }
-           }
+            }
             if([cls respondsToSelector:@selector(memoryType)]){
                 if([cls memoryType] == HMModuleSinglten){
                     singletons[NSStringFromClass(cls)] = inst;
@@ -168,6 +158,14 @@ static HMModuleManager *instance;
 -(id)parserObject:(NSString *)type{
     if([type hasPrefix:@"<"] && [type hasSuffix:@">"]){
         type = [type substringWithRange:NSMakeRange(1, type.length - 2)];
+    }else if([type containsString:@"<"] && [type hasSuffix:@">"]){
+        NSString *temp_type = [type substringWithRange:NSMakeRange(0, type.length - 1)];
+        NSArray* temp = [temp_type componentsSeparatedByString:@"<"];
+        if(temp.count > 1){
+            type = temp[1];
+        }else{
+            return nil;
+        }
     }
     Class cls = [self getInstanceClassByName:type];
     if(cls){

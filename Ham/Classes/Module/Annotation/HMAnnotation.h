@@ -25,26 +25,29 @@
 #define HMDATA(sectname) __attribute((used, section("__DATA,"#sectname" ")))
 
 #define HMModule(name,cls) \
-class cls; \
+@class cls; \
 char const * HM##name##_mod HMDATA(HMSectModuleName) =  "{ \""#name"\" : \""#cls"\"}";
 
 #define HMKeyModule(index,name,cls) \
-class cls; \
+@class cls; \
 char const * HM##index##_mod_##cls##ddd HMDATA(HMSectModuleName) =  "{ \"" name"\" : \""#cls"\"}";
 
 #define HMClass(cls) \
 HMModule(cls,cls)
 
+#define HMView(proto,cls) \
+HMService(proto,cls)\
+
 #define HMService(proto,cls) \
-protocol proto; \
-char const * HM##proto##_ser HMDATA(HMSectModuleName) =  "{ \""#proto"\" : \""#cls"\"}";
+@protocol proto; \
+char const * HM##proto##_ser##cls##end HMDATA(HMSectModuleName) =  "{ \""#proto"\" : \""#cls"\"}";
 
 #define HMCustomAnnotation(owner,key,value) \
-class HMAnnotation; \
+@class HMAnnotation; \
 char const * HM##owner##_##key##_##value##_contr_Annotation HMDATA(HMSectCustom) =  "{\""#owner"\":{ \""#key"\" : \""#value"\"}}";
 
 #define HMCustomAnnotationString(owner,key,value) \
-class HMAnnotation; \
+@class HMAnnotation; \
 char const * HM##owner##_##key##_contr_Annotation HMDATA(HMSectCustom) =  "{\""#owner"\":{ \""#key"\" :\"" value"\"}}";
 
 #define InstantProtocol(protocol) \
@@ -64,7 +67,7 @@ char const * HM##owner##_##key##_contr_Annotation HMDATA(HMSectCustom) =  "{\""#
 
 
 #define Configure(level) \
-class HMAnnotation;   \
+@class HMAnnotation;   \
 __attribute__((constructor(1001 + level)))
 #endif
 

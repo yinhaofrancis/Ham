@@ -6,14 +6,8 @@
 //
 
 #import "HMURL.h"
-#import "HMAnnotation.h"
-#import "HMControllerManager.h"
 @implementation NSURL (HMURL)
 
-//- (UIViewController *)open{
-//    NSMutableDictionary* mdic = [self.urlParam mutableCopy];
-//    return [InstantProtocol(HMControllerManager) dequeueViewController:self.path param:mdic];
-//}
 - (NSDictionary<NSString *,NSString *> *)urlParam{
     NSMutableDictionary* a = [[NSMutableDictionary alloc] init];
     NSURLComponents* comp = [[NSURLComponents alloc] initWithString:self.absoluteString];
