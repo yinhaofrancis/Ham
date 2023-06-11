@@ -6,7 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Ham/Ham-Swift.h>
+@class RouterTree;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HMAnotationStorage : NSObject

@@ -11,6 +11,9 @@
 #import "HMAnotationStorage.h"
 #import <objc/runtime.h>
 #import "HMOCRunTimeTool.h"
+#import <Ham/Ham-Swift.h>
+#import "Ham.h"
+
 //static NSMutableDictionary *dc;
 static BOOL debounce = false;
 
