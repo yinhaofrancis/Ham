@@ -21,6 +21,7 @@ static HMModuleManager *instance;
     NSMutableDictionary<NSString *,id> *singletons;
     NSMutableDictionary<NSString *,HMWeakContainer*> *weaksingletons;
     dispatch_semaphore_t sem;
+    dispatch_queue_t queue;
 }
 - (instancetype)init {
     self = [super init];
@@ -29,6 +30,7 @@ static HMModuleManager *instance;
         singletons = [[NSMutableDictionary alloc] init];
         weaksingletons = [[NSMutableDictionary alloc] init];
         sem = dispatch_semaphore_create(1);
+        queue = dispatch_queue_create("HMModuleManager", DISPATCH_QUEUE_CONCURRENT);
     }
     return self;
 }
@@ -96,8 +98,10 @@ static HMModuleManager *instance;
             
             if ([cls respondsToSelector:@selector(isAsync)]){
                 if([cls isAsync]){
-                    dispatch_queue_t q = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL);
-                    inst = [[HMProxy alloc] initWithQueue:q withObject:inst];
+                    inst = [[HMProxy alloc] initWithQueue:queue withObject:inst];
+                    if([inst respondsToSelector:@selector(setQueue:)]){
+                        [inst setQueue:queue];
+                    }
                 }
             }
             if([cls respondsToSelector:@selector(memoryType)]){

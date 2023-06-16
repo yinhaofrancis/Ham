@@ -20,6 +20,7 @@ typedef NS_ENUM(NSUInteger, HMModuleMemoryType) {
 @optional
 +(BOOL) isAsync;
 @property (nonatomic,copy) NSString *name;
+@property (nonatomic,strong) dispatch_queue_t queue;
 - (instancetype)initWithParam:(NSDictionary *)param;
 @end
 
