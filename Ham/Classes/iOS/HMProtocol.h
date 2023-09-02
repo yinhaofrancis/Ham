@@ -19,8 +19,6 @@ HMCustomAnnotation(HMSectCtrl,router,controller)
 @class controller; \
 char const * HMConr_##controller##_contr_Annotation HMDATA(HMSectCustom) =  "{\"HMSectCtrl\":{ \"" router"\" :\""#controller"\"}}";
 
-
-
 #define HMNextKeyController(key,router,controller) \
 @class controller; \
 char const * HMConr_##controller##_contr##key##_Annotation HMDATA(HMSectCustom) =  "{\"HMSectCtrl\":{ \"" router"\" :\""#controller"\"}}";
@@ -153,6 +151,13 @@ BOOL HMShowRoutePresentMainWindowNoAnimation(NSString * name,NSDictionary  * _Nu
 
 -(NSURL *)loadLocalUrl:(NSString *)name;
 
+@end
+
+@protocol HMVCFactory <NSObject>
+
+@optional
+- (UIViewController *)routeVC:(NSDictionary *)param context:(id)ctx;
+- (NSString *)redirectRoute:(NSDictionary *)param context:(id)ctx;
 @end
 
 NS_ASSUME_NONNULL_END

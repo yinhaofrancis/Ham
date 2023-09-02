@@ -22,29 +22,8 @@ HMService(HMControllerManager,HMControllerManagerImp)
 @implementation HMControllerManagerImp
 @synthesize lock;
 - (UIViewController *)dequeueViewController:(NSString *)name param:(NSDictionary *)param context:(nullable id)ctx{
-
-    
     @try {
         UIViewController * vc = [self dequeueViewControllerInner:name param:param context:ctx];
-        if(vc == nil){
-            NSMutableDictionary* errorParam = param.mutableCopy;
-            errorParam[@"_route"] = name;
-            vc = [self dequeueViewControllerInner:@"/app/error" param:param context:ctx];
-        }
-#if DEBUG
-        if(vc == nil){
-            UIViewController * vc = [[UIViewController alloc] init];
-            UILabel* lb = [[UILabel alloc] init];
-            lb.text = @"正在装修";
-            lb.textAlignment = NSTextAlignmentCenter;
-            lb.backgroundColor = UIColor.whiteColor;
-            lb.frame = vc.view.bounds;
-            lb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-            [vc.view addSubview:lb];
-            return vc;
-        }
-#endif
         return vc;
     } @catch (NSException *exception) {
         return nil;
@@ -65,16 +44,28 @@ HMService(HMControllerManager,HMControllerManagerImp)
     param = pathParam;
     UIViewController *obj;
     id temp = [cls alloc];
-    if ([temp respondsToSelector:@selector(routeVC)]){
-        obj = [temp routeVC];
-        return obj;
-    }
     if([cls conformsToProtocol:@protocol(HMNameController)]){
         [HMOCRunTimeTool assignIVar:@{@"vcName":name} ToObject:temp];
     }
     if(temp){
         [HMModuleManager.shared assignAllModule:temp];
     }
+    if ([temp respondsToSelector:@selector(routeVC:context:)]){
+        obj = [temp routeVC:param context:cls];
+        if(obj == nil && [temp respondsToSelector:@selector(redirectRoute:context:)]){
+            NSString * path = [temp redirectRoute:param context:ctx];
+            return [self dequeueViewControllerInner:path param:param context:ctx];
+        }else{
+            [HMModuleManager.shared assignAllModule:obj];
+            return obj;
+        }
+    }else if ([temp respondsToSelector:@selector(redirectRoute:context:)]){
+        NSString * path = [temp redirectRoute:param context:ctx];
+        if(path.length > 0){
+            return [self dequeueViewControllerInner:path param:param context:ctx];
+        }
+    }
+    
     if([cls conformsToProtocol:@protocol(HMParamController)]){
         if ([temp respondsToSelector:@selector(canOpenViewController)]){
             if([temp canOpenViewController]){

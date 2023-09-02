@@ -21,9 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol HMVCFactory <NSObject>
-- (UIViewController *)routeVC;
-@end
+
 @interface HMControllerManagerImp : NSObject<HMModule,HMControllerManager>
 @property (nonatomic,strong) NSMutableArray<HMWeakContainer *> *routers;
 @property (nonatomic,strong) NSHashTable *activeViewController;
