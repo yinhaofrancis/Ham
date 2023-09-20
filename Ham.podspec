@@ -42,6 +42,10 @@ francis private Module with objective-C
     u.public_header_files = 'Ham/Classes/Render/**/*.h'
     u.user_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) HMRENDERMODULE=1' }
     u.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) HMRENDERMODULE=1' }
+    u.user_target_xcconfig = { 'CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER' => 'NO' }
+    u.pod_target_xcconfig = { 'CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER' => 'NO' }
+    u.user_target_xcconfig = { 'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO' }
+    u.pod_target_xcconfig = { 'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO' }
     u.dependency 'Ham/Module'
   end
   s.subspec 'iOS' do |u|
@@ -50,6 +54,10 @@ francis private Module with objective-C
     u.public_header_files = 'Ham/Classes/iOS/**/*.h'
     u.user_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) HMIOS=1' }
     u.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) HMIOS=1' }
+    u.user_target_xcconfig = { 'CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER' => 'NO' }
+    u.pod_target_xcconfig = { 'CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER' => 'NO' }
+    u.user_target_xcconfig = { 'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO' }
+    u.pod_target_xcconfig = { 'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO' }
     u.dependency 'Ham/Module'
   end
   s.subspec 'H5' do |u|
@@ -58,6 +66,10 @@ francis private Module with objective-C
     u.public_header_files = 'Ham/Classes/H5/**/*.h'
     u.user_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) HMH5MODULE=1' }
     u.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) HMH5MODULE=1' }
+    u.user_target_xcconfig = { 'CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER' => 'NO' }
+    u.pod_target_xcconfig = { 'CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER' => 'NO' }
+    u.user_target_xcconfig = { 'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO' }
+    u.pod_target_xcconfig = { 'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO' }
     u.dependency 'Ham/iOS'
   end
 end
