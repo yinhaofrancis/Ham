@@ -1,0 +1,18 @@
+PODS:
+  - Ham/iOS (0.3.1):
+    - Ham/Module
+  - Ham/Module (0.3.1)
+
+DEPENDENCIES:
+  - Ham/iOS (from `../`)
+
+EXTERNAL SOURCES:
+  Ham:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Ham: 84a43787ce339be9c37947f0ae50cf4e4c24aa95
+
+PODFILE CHECKSUM: 202dbd9219aa2565f1a23d6388eecc26a063dbd6
+
+COCOAPODS: 1.12.1
